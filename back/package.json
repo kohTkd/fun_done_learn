@@ -1,0 +1,11 @@
+{
+  "name": "fun-done-learn",
+  "description": "",
+  "version": "0.1.0",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "serverless-python-requirements": "^5.1.0",
+    "serverless-wsgi": "^1.7.5"
+  }
+}

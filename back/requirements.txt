@@ -1,0 +1,7 @@
+awscli == 1.18.89
+boto3 == 1.14.12
+Flask == 1.1.2
+Flask-JWT-Extended == 3.24.1
+
+mamba == 0.11.0
+pep8 == 1.7.1
