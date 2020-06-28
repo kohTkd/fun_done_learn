@@ -2,26 +2,23 @@ version: "3.7"
 volumes:
   backend-node:
     driver: local
-  pycache:
-    driver: local
   dynamodb-data:
     driver: local
 services:
-  # front:
-  #   build: ./front
-  #   volumes:
-  #     - ./front:/usr/src/app
   back:
     build: ./back
+    restart: always
     volumes:
       - ./back:/usr/src/app
+      - ./dynamodb/tables:/usr/src/app/config/dynamodb/tables
       - backend-node:/usr/src/app/node_modules
     ports:
       - "5000:5000"
     environment:
       DYNAMODB_ENDPOINT: http://dynamodb:8000
-  redis:
-    image: redis
+      DYNAMODB_REGION: ap-northeast-1
+      AWS_ACCESS_KEY_ID: AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY: AWS_SECRET_ACCESS_KEY
   dynamodb:
     image: amazon/dynamodb-local
     volumes:
@@ -30,4 +27,4 @@ services:
       - java
     command: ["-jar", "DynamoDBLocal.jar", "-sharedDb"]
     ports:
-      - "8080:8080"
+      - "8000:8000"

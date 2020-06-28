@@ -1,0 +1,19 @@
+{
+  "TableName": "boards",
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "token",
+      "AttributeType": "S"
+    }
+  ],
+  "KeySchema": [
+    {
+      "AttributeName": "token",
+      "KeyType": "HASH"
+    }
+  ],
+  "ProvisionedThroughput": {
+    "ReadCapacityUnits": 1,
+    "WriteCapacityUnits": 1
+  }
+}
