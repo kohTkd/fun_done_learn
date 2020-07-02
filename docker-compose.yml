@@ -1,17 +1,28 @@
 version: "3.7"
 volumes:
-  backend-node:
+  back-node:
     driver: local
   dynamodb-data:
     driver: local
 services:
+  front:
+    build: ./front
+    restart: always
+    volumes:
+      - ./front:/usr/src/app
+      # node_modulesはボリュームコンテナに置きたいが、エディタ上での開発の利便性のためにローカル環境にインストール
+      # - front-node:/usr/src/app/node_modules
+    ports:
+      - "8080:8080"
   back:
     build: ./back
     restart: always
     volumes:
       - ./back:/usr/src/app
       - ./dynamodb/tables:/usr/src/app/config/dynamodb/tables
-      - backend-node:/usr/src/app/node_modules
+      - back-node:/usr/src/app/node_modules
+    depends_on:
+      - dynamodb
     ports:
       - "5000:5000"
     environment:
