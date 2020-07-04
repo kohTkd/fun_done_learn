@@ -10,4 +10,4 @@ RUN yarn install
 
 EXPOSE 8080
 
-CMD ["yarn", "run", "serve"]
+CMD ["yarn", "run", "serve", "--mode", "development"]

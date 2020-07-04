@@ -1,22 +1,18 @@
 <template>
   <v-app>
     <v-app-bar app color="primary" dark>
+      <span class="hoge"></span>
     </v-app-bar>
 
-    <v-content>
+    <v-main>
       <router-view />
-    </v-content>
+    </v-main>
   </v-app>
 </template>
-
-<style lang="scss" scoped>
-
-</style>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
 @Component
-export default class App extends Vue {
-}
+export default class App extends Vue {}
 </script>
