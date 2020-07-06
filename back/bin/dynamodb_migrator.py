@@ -5,12 +5,11 @@ import os
 
 class DynamoDbMigrator():
     def __init__(self, region=None):
-        if not region:
-            region = os.environ['DYNAMODB_REGION']
+        self.region = region if region else os.environ['DYNAMODB_REGION']
         self._dynamodb = boto3.resource(
             'dynamodb',
             endpoint_url=os.environ['DYNAMODB_ENDPOINT'],
-            region_name=region)
+            region_name=self.region)
         self._table_names = [t.table_name for t in self._dynamodb.tables.all()]
         self._dir = f"{os.path.dirname(__file__)}/../config/dynamodb/tables"
 

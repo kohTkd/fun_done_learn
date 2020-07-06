@@ -1,5 +1,3 @@
-import os
-
 from flask import Blueprint, request
 from app.controllers.sessions_controller import SessionsController
 from app.lib.mixin.respondable import respondable

@@ -13,5 +13,5 @@ class ApiResponse():
         return ApiResponse(body, CREATED)
 
     @classmethod
-    def unprocessable_entity(cls, body):
-        return ApiResponse(body, UNPROCESSABLE_ENTITY)
+    def unprocessable_entity(cls, errors):
+        return ApiResponse({'errors': errors}, UNPROCESSABLE_ENTITY)

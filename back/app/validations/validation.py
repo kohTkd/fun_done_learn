@@ -41,8 +41,8 @@ class Validation(metaclass=ABCMeta):
     def _value(self):
         return getattr(self._model, self._attr_name)
 
-    def _attr_name(self):
-        with open(f"{self.__locale_path()}/{self._model.model_name}.yml", 'r') as yml:
+    def _translated_attr(self):
+        with open(f"{self._locale_path()}/{self._model.model_name}.yml", 'r') as yml:
             locale = yaml.load(yml)
 
         return locale[self._attr_name]

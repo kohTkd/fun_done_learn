@@ -8,4 +8,4 @@ class MaxLengthValidation(Validation):
         return self._valid
 
     def message(self):
-        return f"{self._attr_name()}は{self._threshold}以下で設定してください"
+        return f"{self._translated_attr()}は{self._threshold}文字以内で設定してください"

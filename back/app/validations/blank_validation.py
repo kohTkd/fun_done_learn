@@ -8,4 +8,4 @@ class BlankValidation(Validation):
         return self._valid
 
     def message(self):
-        return f"{self._attr_name()}は必須です"
+        return f"{self._translated_attr()}は必須です"

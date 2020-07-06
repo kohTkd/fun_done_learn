@@ -61,6 +61,16 @@ class ApplicationRepository(metaclass=ABCMeta):
         else:
             return self.entity_class(**response.get('Item'))
 
+    def scan(self, **kwargs):
+        return [item for item in self._scan(**kwargs)]
+
+    def _scan(self, **kwargs) -> list:
+        response = self._table().scan(**kwargs)
+        items = [item for item in response['Items']]
+        if 'LastEvaluatedKey' not in response:
+            return items
+        return items + self._scan(**dict(kwargs, ExclusiveStartKey=response['LastEvaluatedKey']))
+
     @abstractmethod
     def _to_save_format(self, record):
         raise NotImplementedError()

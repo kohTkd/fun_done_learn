@@ -14,7 +14,7 @@ class Validatable(metaclass=ABCMeta):
 
     def error_messages(self) -> list:
         return [
-            error.message for error in [
+            error.message() for error in [
                 v for v in self._all_validations() if v.is_invalid()]]
 
     def _register_validation(
