@@ -13,4 +13,4 @@ def create_session():
 
 @app.route('/sessions/<token>', methods=['GET'])
 def show_session(token):
-    pass
+    return SessionsController.show({'token': token})

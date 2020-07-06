@@ -15,6 +15,9 @@ class Session(ApplicationEntity):
         super().__init__(**attrs)
         self.title = attrs.get('title')
         self.token = attrs.get('token')
+        if attrs.get('persisted'):
+            self.persist()
+            self.created_at = attrs.get('created_at')
 
         self._register_validation('title', BlankValidation)
         self._register_validation('title', MaxLengthValidation, MAX_TITLE_LENGTH)

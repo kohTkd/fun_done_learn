@@ -9,10 +9,14 @@ from app.lib.mixin.validatable import Validatable
 class ApplicationEntity(Validatable, metaclass=ABCMeta):
     def __init__(self, **attrs):
         super().__init__()
-        self._persisted = False
-        self.created_at = attrs.get('created_at')
-        if isinstance(self.created_at, str):
-            self.created_at = dateutil.parser.parse(self.created_at)
+        if attrs.get('persisted'):
+            self._persisted = True
+            self.created_at = attrs.get('created_at')
+            if isinstance(self.created_at, str):
+                self.created_at = dateutil.parser.parse(self.created_at)
+        else:
+            self._persisted = False
+            self.created_at = None
 
     def set_time_stamp(self):
         now = datetime.datetime.now()

@@ -2,7 +2,7 @@ class SessionPresenter():
     def __init__(self, session):
         self.session = session
 
-    def detail(self):
+    def detail(self) -> dict:
         return {
             'title': self.session.title,
             'token': self.session.token,

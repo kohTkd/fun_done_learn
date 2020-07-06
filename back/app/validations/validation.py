@@ -43,9 +43,9 @@ class Validation(metaclass=ABCMeta):
 
     def _translated_attr(self):
         with open(f"{self._locale_path()}/{self._model.model_name}.yml", 'r') as yml:
-            locale = yaml.load(yml)
+            locale = yaml.load(yml, Loader=yaml.FullLoader)
 
-        return locale[self._attr_name]
+        return locale['attributes'][self._attr_name]
 
     def _locale_path(self):
         return f"{os.path.dirname(__file__)}/../../config/locale/ja"
