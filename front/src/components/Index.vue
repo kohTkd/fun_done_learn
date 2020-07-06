@@ -13,8 +13,8 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import NewSession from '@/components/sessions/NewSession.vue';
-import JoinSession from '@/components/sessions/JoinSession.vue';
+import NewSession from '@/components/index/NewSession.vue';
+import JoinSession from '@/components/index/JoinSession.vue';
 import NewSessionForm from '@/models/forms/sessions/new-session-form';
 import JoinSessionForm from '@/models/forms/sessions/join-session-form';
 import SessionsRepository from '@/repositories/sessions-repository';
