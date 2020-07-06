@@ -2,15 +2,15 @@ import random
 import string
 
 
-from app.constants.board_constants import MAX_TITLE_LENGTH
+from app.constants.session_constants import MAX_TITLE_LENGTH
 from app.entities.application_entity import ApplicationEntity
 from app.lib.mixin.validatable import model_name
 from app.validations.blank_validation import BlankValidation
 from app.validations.max_length_validation import MaxLengthValidation
 
 
-@model_name('board')
-class Board(ApplicationEntity):
+@model_name('session')
+class Session(ApplicationEntity):
     def __init__(self, **attrs):
         super().__init__(**attrs)
         self.title = attrs.get('title')

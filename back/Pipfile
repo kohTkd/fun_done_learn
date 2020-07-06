@@ -8,6 +8,7 @@ awscli = "==1.18.89"
 boto3 = "==1.14.12"
 Flask = "==1.1.2"
 python-dateutil = "==2.8.1"
+flask-cors = "*"
 
 [dev-packages]
 flake8 = "==3.8.3"

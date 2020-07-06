@@ -30,6 +30,9 @@ class DynamoDbMigrator():
                 continue
             self.truncate(file)
 
+    def set_test_region(self):
+        os.environ['DYNAMODB_REGION'] = self.region
+
     def _path_to(self, file):
         return os.path.join(self._dir, file)
 

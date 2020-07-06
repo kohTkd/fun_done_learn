@@ -17,8 +17,16 @@ functions:
   app:
     handler: wsgi_handler.handler
     events:
-      - http: ANY /
-      - http: 'ANY {proxy+}'
+      - http:
+          path: ANY /
+          cors:
+            origin: "*"
+            headers: "*"
+      - http:
+          path: 'ANY {proxy+}'
+          cors:
+            origin: "*"
+            headers: "*"
 custom:
   wsgi:
     app: app.main.app
@@ -28,10 +36,10 @@ custom:
 
 resources: # CloudFormation template syntax from here on.
   Resources:
-    boards:
+    sessions:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: boards
+        TableName: sessions
         AttributeDefinitions:
           - AttributeName: token
             AttributeType: S

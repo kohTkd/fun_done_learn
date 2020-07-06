@@ -1,7 +1,8 @@
-from app.validations.validation import Validation
+from app.validations.validation import Validation, validation_method
 
 
 class MaxLengthValidation(Validation):
+    @validation_method
     def _execute(self):
         self._valid = len(self._value()) <= self._threshold
         return self._valid

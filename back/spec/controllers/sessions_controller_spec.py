@@ -1,14 +1,15 @@
 from expects import expect, equal, have_key
 from mamba import description, context, it, before
 
-from app.controllers.boards_controller import BoardsController
-from app.repositories.boards_repository import BoardsRepository
+from app.controllers.sessions_controller import SessionsController
+from app.repositories.sessions_repository import SessionsRepository
 
 from bin.dynamodb_migrator import DynamoDbMigrator
 
-with description(BoardsController) as self:
+with description(SessionsController) as self:
     with before.all:
         self.migrator = DynamoDbMigrator('us-east-1')
+        self.migrator.set_test_region()
 
     with before.each:
         self.migrator.truncate_all()
@@ -20,19 +21,19 @@ with description(BoardsController) as self:
                 self.params = {'title': self.title}
 
             with it('returns status 201'):
-                response = BoardsController.create(self.params)
+                response = SessionsController.create(self.params)
                 expect(response.status).to(equal(201))
 
             with it('returns created resource'):
-                response_body = BoardsController.create(self.params).body
+                response_body = SessionsController.create(self.params).body
                 expect(response_body['title']).to(equal(self.title))
                 expect(response_body).to(have_key('token'))
                 expect(response_body).to(have_key('created_at'))
 
-            with it('save board'):
-                response_body = BoardsController.create(self.params).body
+            with it('save session'):
+                response_body = SessionsController.create(self.params).body
                 token = response_body['token']
                 created_at = response_body['created_at']
-                board = BoardsRepository().find(token)
-                expect(board.token).to(equal(token))
-                expect(str(board.created_at)).to(equal(created_at))
+                session = SessionsRepository().find(token)
+                expect(session.token).to(equal(token))
+                expect(str(session.created_at)).to(equal(created_at))

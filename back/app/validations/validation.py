@@ -3,6 +3,15 @@ import os
 import yaml
 
 
+def validation_method(func):
+    def wrapper(self, *args, **kwargs):
+        valid = func(self, *args, **kwargs)
+        self.valid = valid
+        return valid
+
+    return wrapper
+
+
 class Validation(metaclass=ABCMeta):
     def __init__(self, model, attr_name, threshold=None):
         self._model = model
