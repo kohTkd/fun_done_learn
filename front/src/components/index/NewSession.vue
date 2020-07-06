@@ -4,9 +4,10 @@
       <v-toolbar-title>Create new session</v-toolbar-title>
     </v-toolbar>
     <v-card-text>
-      <v-form refs="form" v-model="valid" :lazy-validation="true">
+      <v-form ref="form" v-model="valid" :lazy-validation="true">
         <v-text-field
           label="タイトル"
+          name="title"
           :counter="titleMaxLength"
           :rules="titleRules"
           prepend-icon="mdi-tag"
@@ -23,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Emit } from 'vue-property-decorator';
 import NewSessionForm from '@/models/forms/sessions/new-session-form';
 import { TITLE_MAX_LENGTH } from '@/constants/session';
 
@@ -32,8 +33,9 @@ export default class NewSession extends Vue {
   form = new NewSessionForm();
   valid = false;
 
+  @Emit()
   createSession() {
-    if (this.valid) this.$emit('createSession', this.form);
+    return this.valid ? this.form : undefined;
   }
 
   get titleRules(): Array<Function> {

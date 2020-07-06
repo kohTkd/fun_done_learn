@@ -1,5 +1,14 @@
 <template>
-  <v-btn :disabled="disabled" rounded depressed min-width="120" large color="primary" @click="$emit('click')">
+  <v-btn
+    :disabled="disabled"
+    rounded
+    depressed
+    min-width="120"
+    large
+    color="primary"
+    @click="$emit('click')"
+    class="button-primary"
+  >
     {{ label }}
   </v-btn>
 </template>
