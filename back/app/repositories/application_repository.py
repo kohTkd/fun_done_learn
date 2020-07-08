@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+import functools
 import os
 
 import boto3
@@ -30,6 +31,7 @@ def entity_repository(entity_class):
 
 
 def set_timestamp(func):
+    @functools.wraps(func)
     def wrapper(self, entity):
         entity.set_time_stamp()
         return func(self, entity)
@@ -37,6 +39,7 @@ def set_timestamp(func):
 
 
 def require_validation(func):
+    @functools.wraps(func)
     def wrapper(self, entity):
         valid = all(e.is_valid() for e in entity) if isinstance(entity, list) else entity.is_valid()
         if not valid:

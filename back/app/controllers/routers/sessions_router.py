@@ -12,5 +12,6 @@ def create_session():
 
 
 @app.route('/sessions/<token>', methods=['GET'])
+@respondable
 def show_session(token):
     return SessionsController.show({'token': token})

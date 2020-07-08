@@ -1,9 +1,11 @@
 from abc import ABCMeta, abstractmethod
+import functools
 import os
 import yaml
 
 
 def validation_method(func):
+    @functools.wraps(func)
     def wrapper(self, *args, **kwargs):
         valid = func(self, *args, **kwargs)
         self.valid = valid
