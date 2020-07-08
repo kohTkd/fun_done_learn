@@ -25,8 +25,9 @@ import SessionsRepository from '@/repositories/sessions-repository';
     JoinSession
   }
 })
-export default class Start extends Vue {
+export default class Index extends Vue {
   async createSession(form: NewSessionForm) {
+    console.log(form);
     SessionsRepository.create(form.toParams()).then(response =>
       this.$router.push({ name: 'session', params: { token: response.data.token } })
     );

@@ -1,8 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
-      <span class="hoge"></span>
-    </v-app-bar>
+    <v-app-bar app color="primary" dark />
 
     <v-main>
       <router-view />

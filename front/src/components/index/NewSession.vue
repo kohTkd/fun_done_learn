@@ -33,7 +33,7 @@ export default class NewSession extends Vue {
   form = new NewSessionForm();
   valid = false;
 
-  @Emit()
+  @Emit('createSession')
   createSession() {
     return this.valid ? this.form : undefined;
   }

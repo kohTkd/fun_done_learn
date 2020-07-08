@@ -1,20 +1,31 @@
 <template>
   <v-container class="fill-height" fluid>
-    <v-row align="center" justify="center">
-      <v-col cols="12" sm="8" md="4">This is Session Page. {{ token }}</v-col>
-    </v-row>
+    <v-app-bar app color="info" dark>
+      {{ session.title }}
+    </v-app-bar>
   </v-container>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import Session from '@/models/session';
+import SessionsRepository from '@/repositories/sessions-repository';
 
 @Component
 export default class Start extends Vue {
-  token = '';
+  session = new Session({});
 
-  created() {
-    this.token = this.$route.params.token;
+  mounted() {
+    const token = this.$route.params.token;
+    this.fetchSession(token);
+  }
+
+  private async fetchSession(token: string) {
+    return SessionsRepository.find(token).then(response => {
+      console.log(response);
+      this.session = new Session(response.data);
+      return this.session;
+    });
   }
 }
 </script>
