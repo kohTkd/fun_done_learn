@@ -3,6 +3,13 @@ const path = require('path');
 
 module.exports = {
   transpileDependencies: ['vuetify'],
+  css: {
+    loaderOptions: {
+      scss: {
+        prependData: '@import "./src/sass/main.scss";'
+      }
+    }
+  },
   configureWebpack: {
     resolve: {
       extensions: ['.ts', '.vue', '.json'],
