@@ -1,0 +1,27 @@
+{
+  "TableName": "sticky_notes",
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "token",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "session_token",
+      "AttributeType": "S"
+    }
+  ],
+  "KeySchema": [
+    {
+      "AttributeName": "session_token",
+      "KeyType": "HASH"
+    },
+    {
+        "AttributeName": "token",
+        "KeyType": "RANGE"
+    }
+  ],
+  "ProvisionedThroughput": {
+    "ReadCapacityUnits": 1,
+    "WriteCapacityUnits": 1
+  }
+}
