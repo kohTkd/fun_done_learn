@@ -27,9 +27,9 @@ services:
       - "5000:5000"
     environment:
       DYNAMODB_ENDPOINT: http://dynamodb:8000
-      DYNAMODB_REGION: ap-northeast-1
-      AWS_ACCESS_KEY_ID: AWS_ACCESS_KEY_ID
-      AWS_SECRET_ACCESS_KEY: AWS_SECRET_ACCESS_KEY
+      DYNAMODB_REGION: ${DYNAMODB_REGION}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       CORS_ORIGIN: "*"
   dynamodb:
     image: amazon/dynamodb-local
@@ -37,6 +37,6 @@ services:
       - dynamodb-data:/home/dynamodblocal/data
     entrypoint:
       - java
-    command: ["-jar", "DynamoDBLocal.jar", "-sharedDb"]
+    command: ["-jar", "DynamoDBLocal.jar"]
     ports:
       - "8000:8000"

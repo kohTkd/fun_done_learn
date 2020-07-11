@@ -6,5 +6,6 @@ class SessionPresenter():
         return {
             'title': self.session.title,
             'token': self.session.token,
-            'created_at': str(self.session.created_at)
+            'created_at': str(self.session.created_at),
+            'updated_at': str(self.session.updated_at)
         }

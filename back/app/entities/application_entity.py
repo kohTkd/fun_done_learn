@@ -11,12 +11,12 @@ class ApplicationEntity(Validatable, metaclass=ABCMeta):
         super().__init__()
         if attrs.get('persisted'):
             self._persisted = True
-            self.created_at = attrs.get('created_at')
-            if isinstance(self.created_at, str):
-                self.created_at = dateutil.parser.parse(self.created_at)
+            self._restore_timestamp(attrs, 'created_at')
+            self._restore_timestamp(attrs, 'updated_at')
         else:
             self._persisted = False
             self.created_at = None
+            self.updated_at = None
 
     def set_time_stamp(self):
         now = datetime.datetime.now()
@@ -31,3 +31,9 @@ class ApplicationEntity(Validatable, metaclass=ABCMeta):
 
     def is_persisted(self):
         return self._persisted
+
+    def _restore_timestamp(self, attrs, attr_name):
+        timestamp = attrs.get(attr_name)
+        if isinstance(timestamp, str):
+            timestamp = dateutil.parser.parse(timestamp)
+        setattr(self, attr_name, timestamp)

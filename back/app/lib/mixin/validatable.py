@@ -1,7 +1,6 @@
 from abc import ABCMeta
 from app.validations.validation import Validation
 
-import logging
 
 def validate(attr_name: str, validation: Validation, check_value=None):
     def decoratee(klass):
@@ -59,7 +58,6 @@ class Validatable(metaclass=ABCMeta):
             self._register_validation(
                 v['attr_name'], v['validation'], v['check_value']
             )
-
 
 
 def model_name(key):

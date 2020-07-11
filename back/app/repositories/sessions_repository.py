@@ -11,4 +11,5 @@ class SessionsRepository(ApplicationRepository):
             'title': session.title,
             'token': session.token,
             'created_at': str(session.created_at),
+            'updated_at': str(session.updated_at),
         }

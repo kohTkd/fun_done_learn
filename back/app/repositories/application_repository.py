@@ -10,22 +10,40 @@ from app.errors.not_found_error import NotFoundError
 
 
 def table_name(name):
-    def decoratee(klass):
-        setattr(klass, 'table_name', name)
-        return klass
-    return decoratee
+    return __add_attr('table_name', name)
+    # def decoratee(klass):
+    #     setattr(klass, 'table_name', name)
+    #     return klass
+    # return decoratee
 
 
 def hash_key(name):
-    def decoratee(klass):
-        setattr(klass, 'hash_key', name)
-        return klass
-    return decoratee
+    return __add_attr('hash_key', name)
+    # def decoratee(klass):
+    #     setattr(klass, 'hash_key', name)
+    #     return klass
+    # return decoratee
 
 
-def entity_repository(entity_class):
+def range_key(name):
+    return __add_attr('range_key', name)
+    # def decoratee(klass):
+    #     setattr(klass, 'range_key', name)
+    #     return klass
+    # return decoratee
+
+
+def entity_repository(name):
+    return __add_attr('entity_class', name)
+    # def decoratee(klass):
+    #     setattr(klass, 'entity_class', name)
+    #     return klass
+    # return decoratee
+
+
+def __add_attr(attr_name, value):
     def decoratee(klass):
-        setattr(klass, 'entity_class', entity_class)
+        setattr(klass, attr_name, value)
         return klass
     return decoratee
 
@@ -61,9 +79,11 @@ class ApplicationRepository(metaclass=ABCMeta):
         self._table().put_item(Item=item)
         return entity.persist()
 
-    def find(self, value):
+    def find(self, hash_key, range_key=None):
         condition = {}
-        condition[self.hash_key] = value
+        condition[self.hash_key] = hash_key
+        if range_key:
+            condition[self.range_key] = range_key
         try:
             response = self._table().get_item(Key=condition)
             item = response.get('Item')

@@ -30,14 +30,17 @@ with description(SessionsController) as self:
                 expect(response_body['title']).to(equal(self.title))
                 expect(response_body).to(have_key('token'))
                 expect(response_body).to(have_key('created_at'))
+                expect(response_body).to(have_key('updated_at'))
 
             with it('saves session'):
                 response_body = SessionsController.create(self.params).body
                 token = response_body['token']
                 created_at = response_body['created_at']
+                updated_at = response_body['updated_at']
                 session = self.sessions_respository.find(token)
                 expect(session.token).to(equal(token))
                 expect(str(session.created_at)).to(equal(created_at))
+                expect(str(session.updated_at)).to(equal(updated_at))
 
         with context('with invalid parameters'):
             with shared_context('Invalid parameters examples'):
@@ -85,6 +88,7 @@ with description(SessionsController) as self:
                 expect(response_body['title']).to(equal('Some Title'))
                 expect(response_body['token']).to(equal('SomeToken'))
                 expect(response_body['created_at']).to(equal(str(self.session.created_at)))
+                expect(response_body['updated_at']).to(equal(str(self.session.updated_at)))
 
         with context('With invalid token'):
             with before.each:
