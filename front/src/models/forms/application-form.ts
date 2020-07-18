@@ -1,7 +1,7 @@
 import attributeNameOf from '@/lib/attribute-names';
 
 export default abstract class ApplicationForm {
-  rules = new Map<string, Array<Function>>();
+  private rules = new Map<string, Array<Function>>();
 
   constructor() {
     this.rules = new Map<string, Array<Function>>();
@@ -12,9 +12,10 @@ export default abstract class ApplicationForm {
     return this.rules.get(key) || [];
   }
 
-  generateRules(keys: Array<string>, generator: Function) {
+  protected setRules(keys: Array<string>, generator: Function) {
     const messageKey = attributeNameOf(...keys);
-    return generator(messageKey);
+    const key = keys.slice(-1)[0];
+    this.rules.set(key, generator(messageKey));
   }
 
   abstract initRules(): void;

@@ -39,11 +39,11 @@ export default class NewSession extends Vue {
 
   @Emit('createSession')
   createSession() {
-    return this.valid ? this.form : undefined;
+    if (this.valid) return this.form;
   }
 
   get titleRules(): Array<Function> {
-    return this.form.rules.get('title') || [];
+    return this.form.getRules('title');
   }
 
   get maxTitleLength(): number {

@@ -20,20 +20,8 @@ export default class StickyNoteForm extends ApplicationForm {
   }
 
   initRules(): void {
-    this.rules.set('sessionToken', this.sessionTokenRules());
-    this.rules.set('content', this.contentRules());
-  }
-
-  sessionTokenRules(): Array<Function> {
-    return this.generateRules(['StickyNote', 'sessionToken'], (messageKey: string) => {
-      return [blankValidation(messageKey)];
-    });
-  }
-
-  contentRules(): Array<Function> {
-    return this.generateRules(['StickyNote', 'content'], (messageKey: string) => {
-      return [blankValidation(messageKey), maxLengthValidation(messageKey, MAX_CONTENT_LENGTH)];
-    });
+    this.setSessionTokenRules();
+    this.setContentRules();
   }
 
   createParams(): NewStickyNoteParams {
@@ -41,5 +29,16 @@ export default class StickyNoteForm extends ApplicationForm {
       session_token: this.sessionToken,
       content: this.content
     };
+  }
+
+  private setSessionTokenRules(): void {
+    this.setRules(['StickyNote', 'sessionToken'], (messageKey: string) => [blankValidation(messageKey)]);
+  }
+
+  private setContentRules(): void {
+    this.setRules(['StickyNote', 'content'], (messageKey: string) => [
+      blankValidation(messageKey),
+      maxLengthValidation(messageKey, MAX_CONTENT_LENGTH)
+    ]);
   }
 }

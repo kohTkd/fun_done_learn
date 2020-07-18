@@ -14,19 +14,24 @@ export default class SessionForm extends ApplicationForm {
   }
 
   initRules(): void {
-    this.rules.set('title', this.titleRules());
-  }
-
-  titleRules(): Array<Function> {
-    return this.generateRules(['Session', 'title'], (messageKey: string) => [
-      blankValidation(messageKey),
-      maxLengthValidation(messageKey, MAX_TITLE_LENGTH)
-    ]);
+    this.setTitleRules();
+    this.setTokenRules();
   }
 
   createParams(): NewSessionParams {
     return {
       title: this.title || ''
     };
+  }
+
+  private setTitleRules(): void {
+    this.setRules(['Session', 'title'], (messageKey: string) => [
+      blankValidation(messageKey),
+      maxLengthValidation(messageKey, MAX_TITLE_LENGTH)
+    ]);
+  }
+
+  private setTokenRules(): void {
+    this.setRules(['Session', 'token'], (messageKey: string) => [blankValidation(messageKey)]);
   }
 }

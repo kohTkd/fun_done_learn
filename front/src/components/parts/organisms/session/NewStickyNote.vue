@@ -56,7 +56,7 @@ export default class NewStickyNote extends Vue {
   }
 
   get contentRules(): Array<Function> {
-    return this.form.rules.get('content') || [];
+    return this.form.getRules('content');
   }
 
   get maxContentLength(): number {

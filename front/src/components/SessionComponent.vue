@@ -16,13 +16,13 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import BoardCircle from '@/components/session/BoardCircle.vue';
+import BoardCircle from '@/components/parts/organisms/session/BoardCircle.vue';
+import NewStickyNote from '@/components/parts/organisms/session/NewStickyNote.vue';
 import Session from '@/models/session';
 import StickyNote from '@/models/sticky-note';
+import StickyNoteForm from '@/models/forms/sticky-note-form';
 import SessionsRepository from '@/repositories/sessions-repository';
 import StickyNotesRepository from '@/repositories/sticky-notes-repository';
-import NewStickyNote from '@/components/session/NewStickyNote.vue';
-import StickyNoteForm from '../models/forms/sticky-note-form';
 
 @Component({
   components: {
