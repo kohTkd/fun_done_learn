@@ -1,8 +1,7 @@
 import attributeNameOf from '@/lib/attribute-names';
-import ApiParams from '../interfaces/api-params';
 
-export default abstract class Form {
-  rules: Map<string, Array<Function>>;
+export default abstract class ApplicationForm {
+  rules = new Map<string, Array<Function>>();
 
   constructor() {
     this.rules = new Map<string, Array<Function>>();
@@ -14,11 +13,9 @@ export default abstract class Form {
   }
 
   generateRules(keys: Array<string>, generator: Function) {
-    const attrName = attributeNameOf(...keys);
-    return generator(attrName);
+    const messageKey = attributeNameOf(...keys);
+    return generator(messageKey);
   }
 
   abstract initRules(): void;
-
-  abstract toParams(): ApiParams;
 }

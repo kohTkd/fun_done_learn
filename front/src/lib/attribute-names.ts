@@ -1,6 +1,10 @@
 const attributes = {
-  session: {
+  Session: {
     title: 'タイトル'
+  },
+  StickyNote: {
+    sessionToken: 'セッショントークン',
+    content: '内容'
   }
 };
 

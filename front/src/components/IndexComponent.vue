@@ -15,8 +15,8 @@
 import { Component, Vue } from 'vue-property-decorator';
 import NewSession from '@/components/index/NewSession.vue';
 import JoinSession from '@/components/index/JoinSession.vue';
-import NewSessionForm from '@/models/forms/sessions/new-session-form';
-import JoinSessionForm from '@/models/forms/sessions/join-session-form';
+import Session from '@/models/session';
+import SessionForm from '@/models/forms/session-form';
 import SessionsRepository from '@/repositories/sessions-repository';
 
 @Component({
@@ -25,15 +25,14 @@ import SessionsRepository from '@/repositories/sessions-repository';
     JoinSession
   }
 })
-export default class Index extends Vue {
-  async createSession(form: NewSessionForm) {
-    console.log(form);
-    SessionsRepository.create(form.toParams()).then(response =>
-      this.$router.push({ name: 'session', params: { token: response.data.token } })
+export default class IndexComponent extends Vue {
+  async createSession(form: SessionForm) {
+    SessionsRepository.create(form.createParams()).then((session: Session) =>
+      this.$router.push({ name: 'session', params: { token: session.token } })
     );
   }
 
-  joinSession(form: JoinSessionForm): void {
+  joinSession(form: SessionForm): void {
     console.log(form);
   }
 }

@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
-import Index from '@/components/Index.vue';
-import Session from '@/components/Session.vue';
+import IndexComponent from '@/components/IndexComponent.vue';
+import SessionComponent from '@/components/SessionComponent.vue';
 
 Vue.use(VueRouter);
 
@@ -9,12 +9,12 @@ const routes: Array<RouteConfig> = [
   {
     path: '/',
     name: 'index',
-    component: Index
+    component: IndexComponent
   },
   {
     path: '/sessions/:token',
     name: 'session',
-    component: Session
+    component: SessionComponent
   }
   // {
   //   path: "/",

@@ -3,6 +3,12 @@ const path = require('path');
 
 module.exports = {
   transpileDependencies: ['vuetify'],
+  devServer: {
+    overlay: {
+      warning: false,
+      error: true
+    }
+  },
   css: {
     loaderOptions: {
       scss: {

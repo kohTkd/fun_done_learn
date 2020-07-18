@@ -1,5 +1,5 @@
-import Vue from "vue";
-import Vuetify from "vuetify";
+import Vue from 'vue';
+import Vuetify from 'vuetify';
 import globalComponents from '@/plugins/components';
 
 Vue.use(Vuetify);

@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { Wrapper, createLocalVue, mount } from '@vue/test-utils';
 import Vuetify from 'vuetify';
 import NewSession from '@/components/index/NewSession.vue';
-import NewSessionForm from '@/models/forms/sessions/new-session-form';
+import SessionForm from '@/models/forms/session-form';
 
 const localVue = createLocalVue();
 const context = describe;
@@ -12,12 +12,12 @@ describe('NewSession.vue', () => {
   let wrapper: Wrapper<NewSession>;
 
   const titleInputItem = () => wrapper.find('input[type="text"][name="title"]');
-  const okButton = () => wrapper.find('button.button-primary');
-  const buildForm = ({title = 'Some Title'}: { title?: string, length?: number}): NewSessionForm => {
-    const form = new NewSessionForm();
+  const okButton = () => wrapper.find('button');
+  const buildForm = ({ title = 'Some Title' }: { title?: string; length?: number } = {}): SessionForm => {
+    const form = new SessionForm();
     form.title = length ? title : 'A'.repeat(length);
     return form;
-  }
+  };
 
   beforeEach(() => {
     vuetify = new Vuetify();
@@ -36,8 +36,8 @@ describe('NewSession.vue', () => {
     expect(okButton().props().disabled).toBe(false);
     okButton().trigger('click');
     const emission = wrapper.emitted('createSession') || [];
-    expect(emission.length).toEqual(1)
-    const form = buildForm({ title: 'Some Title' })
+    expect(emission.length).toEqual(1);
+    const form = buildForm({ title: 'Some Title' });
     expect(emission[1]).toEqual(form);
   });
 
@@ -59,11 +59,11 @@ describe('NewSession.vue', () => {
       titleInputItem().setValue('A');
       await Vue.nextTick();
       expect(okButton().props().disabled).toBe(false);
-    })
+    });
     it.skip('accepts 30 characters title', async () => {
       titleInputItem().setValue('A'.repeat(30));
       await Vue.nextTick();
       expect(okButton().props().disabled).toBe(false);
-    })
-  })
+    });
+  });
 });

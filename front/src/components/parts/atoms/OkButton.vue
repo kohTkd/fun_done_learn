@@ -1,15 +1,6 @@
 <template>
-  <v-btn
-    :disabled="disabled"
-    rounded
-    depressed
-    min-width="120"
-    large
-    color="primary"
-    @click="$emit('click')"
-    class="button-primary"
-  >
-    {{ label }}
+  <v-btn :disabled="disabled" rounded depressed min-width="120" large color="primary" @click="$emit('click')">
+    <slot>OK</slot>
   </v-btn>
 </template>
 
@@ -18,8 +9,6 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 
 @Component
 export default class OkButton extends Vue {
-  @Prop({ default: 'OK' })
-  label!: string;
   @Prop({ default: true })
   disabled!: boolean;
 }
