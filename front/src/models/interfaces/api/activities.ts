@@ -1,13 +1,13 @@
-export interface NewStickyNoteParams {
+export interface NewActivityParams {
   session_token: string;
   content: string;
 }
 
-export interface UpdateStickyNoteParams extends NewStickyNoteParams {
+export interface UpdateActivityParams extends NewActivityParams {
   token: string;
 }
 
-export interface StickyNoteApiInterface {
+export interface ActivityApiInterface {
   session_token: string;
   token: string;
   content: string;

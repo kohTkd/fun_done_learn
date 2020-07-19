@@ -1,5 +1,5 @@
 <template>
-  <div class="sticky-note">
+  <div class="activity">
     <div class="sticky-container">
       <div class="sticky-content">
         <slot name="content" />
@@ -19,7 +19,7 @@ export default class StickyNote extends Vue {}
 </script>
 
 <style scoped lang="scss">
-.sticky-note {
+.activity {
   width: 20rem;
   box-shadow: 0.25rem 0 0.25rem rgba(0, 0, 0, 0.1);
   background-image: linear-gradient(90deg, hsla(0, 0%, 45%, 0.1) 2rem, hsla(0, 100%, 100%, 0) 2.5rem),

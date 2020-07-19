@@ -3,7 +3,7 @@ const attributes = {
     title: 'タイトル',
     token: 'セッショントークン'
   },
-  StickyNote: {
+  Activity: {
     sessionToken: 'セッショントークン',
     content: '内容'
   }

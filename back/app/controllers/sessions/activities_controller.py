@@ -1,21 +1,21 @@
 from app.errors.invalid_entity_error import InvalidEntityError
 from app.errors.not_found_error import NotFoundError
-from app.forms.sticky_note_form import StickyNoteForm
-from app.use_cases.create_sticky_note_use_case import CreateStickyNoteUseCase
-from app.use_cases.query_sticky_notes_use_case import QueryStickyNotesUseCase
-from app.presenters.sticky_note_presenter import StickyNotePresenter
+from app.forms.activity_form import ActivityForm
+from app.use_cases.create_activity_use_case import CreateActivityUseCase
+from app.use_cases.find_activities_use_case import FindActivitiesUseCase
+from app.presenters.activity_presenter import ActivityPresenter
 from app.lib.api_response import ApiResponse
 
 
-class StickyNotesController():
+class ActivitiesController():
     @classmethod
     def create(cls, params: dict) -> ApiResponse:
-        form = StickyNoteForm(**params)
+        form = ActivityForm(**params)
         if form.is_invalid():
             return ApiResponse.unprocessable_entity(form.error_messages())
         try:
-            sticky_note = CreateStickyNoteUseCase.execute(form)
-            return ApiResponse.created(cls._detail(sticky_note))
+            activity = CreateActivityUseCase.execute(form)
+            return ApiResponse.created(cls._detail(activity))
         except NotFoundError as e:
             return ApiResponse.not_found(e.error_messages())
         except InvalidEntityError as e:
@@ -24,18 +24,18 @@ class StickyNotesController():
     @classmethod
     def index(cls, params: dict) -> ApiResponse:
         try:
-            sticky_notes = QueryStickyNotesUseCase.execute(params.get('session_token'))
-            return ApiResponse.ok(cls._details(sticky_notes))
+            activities = FindActivitiesUseCase.execute(params.get('session_token'))
+            return ApiResponse.ok(cls._details(activities))
         except NotFoundError as e:
             return ApiResponse.not_found(e.error_messages())
 
     @classmethod
-    def _detail(cls, sticky_note) -> dict:
-        return StickyNotePresenter(sticky_note).detail()
+    def _detail(cls, activity) -> dict:
+        return ActivityPresenter(activity).detail()
 
     @classmethod
-    def _details(cls, sticky_notes) -> list:
-        return [cls._detail(sticky_note) for sticky_note in sticky_notes]
+    def _details(cls, activities) -> list:
+        return [cls._detail(activity) for activity in activities]
 
     # @classmethod
     # def show(cls, params: dict) -> ApiResponse:

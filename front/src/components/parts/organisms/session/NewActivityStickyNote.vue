@@ -14,7 +14,7 @@
         </v-form>
       </template>
       <template v-slot:menu>
-        <v-btn :disabled="!valid" icon color="brown darken-4" @click="createStickyNote">
+        <v-btn :disabled="!valid" icon color="brown darken-4" @click="createActivity">
           <v-icon>mdi-pencil-plus</v-icon>
         </v-btn>
       </template>
@@ -24,8 +24,8 @@
 
 <script lang="ts">
 import { Component, Vue, Emit, Prop } from 'vue-property-decorator';
-import StickyNoteForm from '@/models/forms/sticky-note-form';
-import { MAX_CONTENT_LENGTH } from '@/constants/sticky-note';
+import ActivityForm from '@/models/forms/activity-form';
+import { MAX_CONTENT_LENGTH } from '@/constants/activity';
 import StickyNote from '@/components/parts/molecules/StickyNote.vue';
 import VForm from '@/lib/v-form';
 
@@ -34,19 +34,19 @@ import VForm from '@/lib/v-form';
     StickyNote: StickyNote
   }
 })
-export default class NewStickyNote extends Vue {
+export default class NewActivityStickyNote extends Vue {
   @Prop()
   sessionToken!: string;
 
-  form = new StickyNoteForm();
+  form = new ActivityForm();
   valid = false;
 
   created() {
     this.initializeForm();
   }
 
-  @Emit('createStickyNote')
-  createStickyNote() {
+  @Emit('createActivity')
+  createActivity() {
     if (this.valid) return this.form;
   }
 
@@ -68,7 +68,7 @@ export default class NewStickyNote extends Vue {
   }
 
   private initializeForm() {
-    this.form = new StickyNoteForm({ sessionToken: this.sessionToken });
+    this.form = new ActivityForm({ sessionToken: this.sessionToken });
   }
 
   private get formRef(): VForm {

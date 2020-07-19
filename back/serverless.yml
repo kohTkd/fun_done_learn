@@ -49,10 +49,10 @@ resources: # CloudFormation template syntax from here on.
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-    sticky_notes:
+    activities:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: sticky_notes
+        TableName: activities
         AttributeDefinitions:
           - AttributeName: session_token
             AttributeType: S

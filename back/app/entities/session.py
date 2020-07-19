@@ -1,4 +1,4 @@
-from app.constants.session_constants import MAX_TITLE_LENGTH
+from app.constants.sessions import MAX_TITLE_LENGTH
 from app.entities.application_entity import ApplicationEntity
 from app.lib.mixin.validatable import model_name
 from app.validations.blank_validation import BlankValidation

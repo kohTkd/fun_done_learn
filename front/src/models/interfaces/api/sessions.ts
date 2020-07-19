@@ -6,7 +6,7 @@ export interface FindSessionParams {
   token: string;
 }
 
-export interface StickyNoteApiInterface {
+export interface ActivityApiInterface {
   token: string;
   title: string;
   created_at?: string | Date;

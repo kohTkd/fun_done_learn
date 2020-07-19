@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
-import IndexComponent from '@/components/IndexComponent.vue';
-import SessionComponent from '@/components/SessionComponent.vue';
+import Index from '@/components/Index.vue';
+import SessionBoard from '@/components/SessionBoard.vue';
 
 Vue.use(VueRouter);
 
@@ -9,27 +9,13 @@ const routes: Array<RouteConfig> = [
   {
     path: '/',
     name: 'index',
-    component: IndexComponent
+    component: Index
   },
   {
     path: '/sessions/:token',
     name: 'session',
-    component: SessionComponent
+    component: SessionBoard
   }
-  // {
-  //   path: "/",
-  //   name: "Home",
-  //   component: Home
-  // },
-  // {
-  //   path: "/about",
-  //   name: "About",
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () =>
-  //     import(/* webpackChunkName: "about" */ "../views/About.vue")
-  // }
 ];
 
 const router = new VueRouter({

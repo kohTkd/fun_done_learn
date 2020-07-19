@@ -1,5 +1,5 @@
 {
-  "TableName": "sticky_notes",
+  "TableName": "activities",
   "AttributeDefinitions": [
     {
       "AttributeName": "token",

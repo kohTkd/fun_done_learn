@@ -2,7 +2,7 @@
   <v-container flued>
     <v-navigation-drawer app right clipped width="350">
       <h2>{{ session.title }}</h2>
-      <NewStickyNote ref="newStickyNote" v-bind:sessionToken="session.token" @createStickyNote="createStickyNote" />
+      <NewActivityStickyNote ref="newActivity" v-bind:sessionToken="session.token" @createActivity="createActivity" />
     </v-navigation-drawer>
     <div class="fun-done-learn-session">
       <div class="circles">
@@ -17,33 +17,33 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import BoardCircle from '@/components/parts/organisms/session/BoardCircle.vue';
-import NewStickyNote from '@/components/parts/organisms/session/NewStickyNote.vue';
+import NewActivityStickyNote from '@/components/parts/organisms/session/NewActivityStickyNote.vue';
 import Session from '@/models/session';
-import StickyNote from '@/models/sticky-note';
-import StickyNoteForm from '@/models/forms/sticky-note-form';
+import Activity from '@/models/activity';
+import ActivityForm from '@/models/forms/activity-form';
 import SessionsRepository from '@/repositories/sessions-repository';
-import StickyNotesRepository from '@/repositories/sticky-notes-repository';
+import ActivitiesRepository from '@/repositories/activities-repository';
 
 @Component({
   components: {
     BoardCircle: BoardCircle,
-    NewStickyNote: NewStickyNote
+    NewActivityStickyNote: NewActivityStickyNote
   }
 })
-export default class SessionComponent extends Vue {
+export default class SessionBoard extends Vue {
   session = Session.dummy;
-  newStickyNoteDialog = false;
-  stickyNotes = new Array<StickyNote>();
+  newActivityDialog = false;
+  activities = new Array<Activity>();
 
   created() {
     const token = this.$route.params.token;
-    this.fetchSession(token).then(() => this.fetchStickyNotes(token));
+    this.fetchSession(token).then(() => this.fetchActivities(token));
   }
 
-  async createStickyNote(form: StickyNoteForm) {
-    StickyNotesRepository.create(form.createParams(), this.session.token).then((stickyNote: StickyNote) => {
-      this.stickyNotes.push(stickyNote);
-      this.newStickyNote.refresh();
+  async createActivity(form: ActivityForm) {
+    ActivitiesRepository.create(form.createParams(), this.session.token).then((activity: Activity) => {
+      this.activities.push(activity);
+      this.newActivity.refresh();
     });
   }
 
@@ -52,14 +52,14 @@ export default class SessionComponent extends Vue {
     return this.session;
   }
 
-  private async fetchStickyNotes(sessionToken: string) {
-    this.stickyNotes = await StickyNotesRepository.fetch(sessionToken);
-    return this.stickyNotes;
+  private async fetchActivities(sessionToken: string) {
+    this.activities = await ActivitiesRepository.fetch(sessionToken);
+    return this.activities;
   }
 
-  private get newStickyNote(): NewStickyNote {
+  private get newActivity(): NewActivityStickyNote {
     // eslint-disable-next-line
-    return (this.$refs as any).newStickyNote as NewStickyNote;
+    return (this.$refs as any).newActivity as NewActivityStickyNote;
   }
 }
 </script>

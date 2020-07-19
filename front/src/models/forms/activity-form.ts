@@ -1,9 +1,9 @@
 import ApplicationForm from '@/models/forms/application-form';
 import { blankValidation, maxLengthValidation } from '@/lib/validations';
-import { MAX_CONTENT_LENGTH } from '@/constants/sticky-note';
-import { NewStickyNoteParams } from '@/models/interfaces/api/sticky-notes';
+import { MAX_CONTENT_LENGTH } from '@/constants/activity';
+import { NewActivityParams } from '@/models/interfaces/api/activities';
 
-export default class StickyNoteForm extends ApplicationForm {
+export default class ActivityForm extends ApplicationForm {
   sessionToken!: string;
   content!: string;
   token!: string;
@@ -24,7 +24,7 @@ export default class StickyNoteForm extends ApplicationForm {
     this.setContentRules();
   }
 
-  createParams(): NewStickyNoteParams {
+  createParams(): NewActivityParams {
     return {
       session_token: this.sessionToken,
       content: this.content
@@ -32,11 +32,11 @@ export default class StickyNoteForm extends ApplicationForm {
   }
 
   private setSessionTokenRules(): void {
-    this.setRules(['StickyNote', 'sessionToken'], (messageKey: string) => [blankValidation(messageKey)]);
+    this.setRules(['Activity', 'sessionToken'], (messageKey: string) => [blankValidation(messageKey)]);
   }
 
   private setContentRules(): void {
-    this.setRules(['StickyNote', 'content'], (messageKey: string) => [
+    this.setRules(['Activity', 'content'], (messageKey: string) => [
       blankValidation(messageKey),
       maxLengthValidation(messageKey, MAX_CONTENT_LENGTH)
     ]);

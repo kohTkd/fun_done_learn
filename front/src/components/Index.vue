@@ -25,7 +25,7 @@ import SessionsRepository from '@/repositories/sessions-repository';
     JoinSession
   }
 })
-export default class IndexComponent extends Vue {
+export default class Index extends Vue {
   createSession(form: SessionForm) {
     SessionsRepository.create(form.createParams()).then((session: Session) => this.routeTo(session));
   }
