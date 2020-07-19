@@ -12,3 +12,9 @@ def create(session_token):
     params = request.get_json()
     params.update({'session_token': session_token})
     return StickyNotesController.create(params)
+
+
+@app.route(namespace, methods=['GET'])
+@respondable
+def index(session_token):
+    return StickyNotesController.index({'session_token': session_token})

@@ -20,3 +20,7 @@ class StickyNotesService():
     @classmethod
     def find(cls, session_token, token) -> StickyNote:
         return StickyNotesRepository().find(session_token, token)
+
+    @classmethod
+    def query(cls, session_token):
+        return StickyNotesRepository().query(session_token)

@@ -3,6 +3,7 @@ from mamba import description, context, it, before, shared_context, included_con
 
 from app.controllers.sessions.sticky_notes_controller import StickyNotesController
 from app.entities.session import Session
+from app.entities.sticky_note import StickyNote
 from app.repositories.sessions_repository import SessionsRepository
 from app.repositories.sticky_notes_repository import StickyNotesRepository
 
@@ -23,7 +24,7 @@ with description(StickyNotesController) as self:
         with context('when specified session is present'):
             with before.each:
                 self.session_token = 'SomeToken'
-                self.session = Session(token=self.session_token, title='Some Title', persisted=True)
+                self.session = Session(token=self.session_token, title='Some Title')
                 self.sessions_respository.save(self.session)
 
             with context('with valid parameters'):
@@ -90,6 +91,64 @@ with description(StickyNotesController) as self:
 
             with it('returns Not Found response'):
                 response = StickyNotesController.create(self.params)
+                expect(response.status).to(equal(404))
+                response_body = response.body
+                expect(response.body['errors']).to(equal('セッションが見つかりません'))
+
+    with description('index()'):
+        with context('when specified session is present'):
+            with shared_context('Valid session examples'):
+                with it('returns OK response'):
+                    response = StickyNotesController.index(self.params)
+                    expect(response.status).to(equal(200))
+                    for response_note, sticky_note in zip(response.body, self.sticky_notes):
+                        expect(response_note['session_token']).to(equal(sticky_note.session_token))
+                        expect(response_note['token']).to(equal(sticky_note.token))
+                        expect(response_note['content']).to(equal(sticky_note.content))
+                        expect(response_note['created_at']).to(equal(str(sticky_note.created_at)))
+                        expect(response_note['updated_at']).to(equal(str(sticky_note.updated_at)))
+
+            with before.each:
+                self.session_token = 'SomeToken'
+                self.session = Session(token=self.session_token, title='Some Title')
+                self.sessions_respository.save(self.session)
+
+                self.params = {'session_token': self.session_token}
+
+            with context('when sticky notes are present'):
+                with before.each:
+                    self.sticky_notes = [
+                        StickyNote(session_token=self.session.token, token='token1', content='Content1'),
+                        StickyNote(session_token=self.session.token, token='token2', content='Content2')
+                    ]
+                    self.sticky_notes_repository.save(self.sticky_notes)
+
+                with included_context('Valid session examples'):
+                    pass
+
+                with context('when other session is present'):
+                    with before.each:
+                        self.other_note = StickyNote(session_token='OtherToken', token='token', content='Content')
+                        self.sticky_notes_repository.save(self.other_note)
+
+                    with it('not returns other session sticky_note'):
+                        response = StickyNotesController.index(self.params)
+                        expect(any([note['token'] == self.other_note.token for note in response.body])).to(equal(False))
+
+            with context('when sticky notes are absent'):
+                with before.each:
+                    self.sticky_notes = []
+
+                with included_context('Valid session examples'):
+                    pass
+
+        with context('when specified session is absent'):
+            with before.each:
+                self.session_token = 'SomeToken'
+                self.params = {'session_token': self.session_token}
+
+            with it('returns Not Found response'):
+                response = StickyNotesController.index(self.params)
                 expect(response.status).to(equal(404))
                 response_body = response.body
                 expect(response.body['errors']).to(equal('セッションが見つかりません'))

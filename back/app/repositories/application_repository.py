@@ -4,6 +4,7 @@ import os
 
 import boto3
 from botocore.exceptions import ClientError
+from boto3.dynamodb.conditions import Key
 
 from app.errors.invalid_entity_error import InvalidEntityError
 from app.errors.not_found_error import NotFoundError
@@ -11,34 +12,18 @@ from app.errors.not_found_error import NotFoundError
 
 def table_name(name):
     return __add_attr('table_name', name)
-    # def decoratee(klass):
-    #     setattr(klass, 'table_name', name)
-    #     return klass
-    # return decoratee
 
 
 def hash_key(name):
     return __add_attr('hash_key', name)
-    # def decoratee(klass):
-    #     setattr(klass, 'hash_key', name)
-    #     return klass
-    # return decoratee
 
 
 def range_key(name):
     return __add_attr('range_key', name)
-    # def decoratee(klass):
-    #     setattr(klass, 'range_key', name)
-    #     return klass
-    # return decoratee
 
 
 def entity_repository(name):
     return __add_attr('entity_class', name)
-    # def decoratee(klass):
-    #     setattr(klass, 'entity_class', name)
-    #     return klass
-    # return decoratee
 
 
 def __add_attr(attr_name, value):
@@ -51,7 +36,11 @@ def __add_attr(attr_name, value):
 def set_timestamp(func):
     @functools.wraps(func)
     def wrapper(self, entity):
-        entity.set_time_stamp()
+        if isinstance(entity, list):
+            for e in entity:
+                e.set_time_stamp()
+        else:
+            entity.set_time_stamp()
         return func(self, entity)
     return wrapper
 
@@ -75,8 +64,9 @@ class ApplicationRepository(metaclass=ABCMeta):
     @set_timestamp
     @require_validation
     def save(self, entity):
-        item = self._to_save_format(entity)
-        self._table().put_item(Item=item)
+        if isinstance(entity, list):
+            return self._save_entities(entity)
+        self._table().put_item(Item=self._to_save_format(entity))
         return entity.persist()
 
     def find(self, hash_key, range_key=None):
@@ -94,7 +84,10 @@ class ApplicationRepository(metaclass=ABCMeta):
             return None
 
     def scan(self, **kwargs):
-        return [self._build_entity(item) for item in self._scan(**kwargs)]
+        return self._build_entities(self._scan(**kwargs))
+
+    def query(self, key_value):
+        return self._build_entities(self._query(key_value))
 
     def _scan(self, **kwargs) -> list:
         response = self._table().scan(**kwargs)
@@ -103,8 +96,22 @@ class ApplicationRepository(metaclass=ABCMeta):
             return items
         return items + self._scan(**dict(kwargs, ExclusiveStartKey=response['LastEvaluatedKey']))
 
+    def _query(self, key_value):
+        response = self._table().query(KeyConditionExpression=Key(self.hash_key).eq(key_value))
+        return response['Items']
+
     def _build_entity(self, item):
         return self.entity_class(**dict(item, persisted=True))
+
+    def _build_entities(self, items):
+        return [self._build_entity(item) for item in items]
+
+    def _save_entities(self, entities):
+        with self._table().batch_writer() as batch:
+            for entity in entities:
+                batch.put_item(Item=self._to_save_format(entity))
+
+        return all([entity.persist() for entity in entities])
 
     @abstractmethod
     def _to_save_format(self, record):
