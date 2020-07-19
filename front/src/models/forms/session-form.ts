@@ -1,7 +1,7 @@
 import ApplicationForm from '@/models/forms/application-form';
 import { blankValidation, maxLengthValidation } from '@/lib/validations';
 import { MAX_TITLE_LENGTH } from '@/constants/session';
-import { NewSessionParams } from '@/models/interfaces/api-params/sessions';
+import { NewSessionParams } from '@/models/interfaces/api/sessions';
 
 export default class SessionForm extends ApplicationForm {
   token!: string;

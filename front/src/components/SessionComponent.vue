@@ -37,12 +37,7 @@ export default class SessionComponent extends Vue {
 
   created() {
     const token = this.$route.params.token;
-    this.fetchSession(token);
-  }
-
-  private async fetchSession(token: string) {
-    this.session = await SessionsRepository.find(token);
-    return this.session;
+    this.fetchSession(token).then(() => this.fetchStickyNotes(token));
   }
 
   async createStickyNote(form: StickyNoteForm) {
@@ -50,6 +45,16 @@ export default class SessionComponent extends Vue {
       this.stickyNotes.push(stickyNote);
       this.newStickyNote.refresh();
     });
+  }
+
+  private async fetchSession(token: string) {
+    this.session = await SessionsRepository.find(token);
+    return this.session;
+  }
+
+  private async fetchStickyNotes(sessionToken: string) {
+    this.stickyNotes = await StickyNotesRepository.fetch(sessionToken);
+    return this.stickyNotes;
   }
 
   private get newStickyNote(): NewStickyNote {

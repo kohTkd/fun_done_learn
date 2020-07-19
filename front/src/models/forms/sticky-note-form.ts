@@ -1,7 +1,7 @@
 import ApplicationForm from '@/models/forms/application-form';
 import { blankValidation, maxLengthValidation } from '@/lib/validations';
 import { MAX_CONTENT_LENGTH } from '@/constants/sticky-note';
-import { NewStickyNoteParams } from '@/models/interfaces/api-params/sticky-notes';
+import { NewStickyNoteParams } from '@/models/interfaces/api/sticky-notes';
 
 export default class StickyNoteForm extends ApplicationForm {
   sessionToken!: string;
