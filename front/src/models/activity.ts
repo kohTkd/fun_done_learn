@@ -1,4 +1,6 @@
 import { ActivityApiInterface } from '@/models/interfaces/api/activities';
+import Placement from '@/models/placement';
+import Position from '@/models/interfaces/position';
 
 export default class Activity {
   sessionToken: string;
@@ -7,12 +9,28 @@ export default class Activity {
   createdAt?: string | Date;
   updatedAt?: string | Date;
 
+  placement: Placement;
+
   constructor({ session_token, token, content, created_at, updated_at }: ActivityApiInterface) {
     this.sessionToken = session_token;
     this.token = token;
     this.content = content;
     this.createdAt = created_at;
     this.updatedAt = updated_at;
+
+    this.placement = Placement.default;
+  }
+
+  place(position: Position) {
+    this.placement.moveTo(position);
+  }
+
+  get left() {
+    return this.placement.left;
+  }
+
+  get top() {
+    return this.placement.top;
   }
 
   static get dummy(): Activity {

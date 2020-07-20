@@ -24,7 +24,8 @@ module.exports = {
         printWidth: 120
       }
     ],
-    '@typescript-eslint/camelcase': 'off' // APIのレスポンスはスネークケースなので、意図的にスネークケースを使うことがある
+    '@typescript-eslint/camelcase': 'off', // APIのレスポンスはスネークケースなので、意図的にスネークケースを使うことがある
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }]
   },
   overrides: [
     {

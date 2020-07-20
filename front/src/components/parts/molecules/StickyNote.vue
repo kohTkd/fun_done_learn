@@ -1,5 +1,5 @@
 <template>
-  <div class="activity">
+  <div class="sticky-note">
     <div class="sticky-container">
       <div class="sticky-content">
         <slot name="content" />
@@ -12,19 +12,26 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 
 @Component
-export default class StickyNote extends Vue {}
+export default class StickyNote extends Vue {
+  @Prop({ default: false })
+  draggable!: boolean;
+}
 </script>
 
 <style scoped lang="scss">
-.activity {
-  width: 20rem;
+@import '@/sass/_variables';
+
+.sticky-note {
+  width: $sticky-note-width;
   box-shadow: 0.25rem 0 0.25rem rgba(0, 0, 0, 0.1);
   background-image: linear-gradient(90deg, hsla(0, 0%, 45%, 0.1) 2rem, hsla(0, 100%, 100%, 0) 2.5rem),
     linear-gradient(90deg, hsla(60, 100%, 85%, 1), hsla(60, 100%, 85%, 1));
   box-sizing: border-box;
+
+  position: absolute;
 
   .sticky-container {
     padding: 0;
