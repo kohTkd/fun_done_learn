@@ -7,7 +7,7 @@ from app.entities.activity import Activity
 from app.repositories.sessions_repository import SessionsRepository
 from app.repositories.activities_repository import ActivitiesRepository
 
-from bin.dynamodb_migrator import DynamoDbMigrator
+from bin.migrate import DynamoDbMigrator
 
 
 with description(ActivitiesController) as self:
@@ -115,7 +115,7 @@ with description(ActivitiesController) as self:
 
                 self.params = {'session_token': self.session_token}
 
-            with context('when sticky notes are present'):
+            with context('when activities are present'):
                 with before.each:
                     self.activities = [
                         Activity(session_token=self.session.token, token='token1', content='Content1'),
@@ -135,7 +135,7 @@ with description(ActivitiesController) as self:
                         response = ActivitiesController.index(self.params)
                         expect(any([note['token'] == self.other_note.token for note in response.body])).to(equal(False))
 
-            with context('when sticky notes are absent'):
+            with context('when activities are absent'):
                 with before.each:
                     self.activities = []
 

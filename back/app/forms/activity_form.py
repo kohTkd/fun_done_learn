@@ -6,8 +6,9 @@ from app.lib.mixin.validatable import validate
 
 
 @model_name('activity')
+@validate('session_token', BlankValidation)
 @validate('content', BlankValidation)
-@validate('content', MaxLengthValidation, MAX_CONTENT_LENGTH)
+@validate('content', MaxLengthValidation, limit=MAX_CONTENT_LENGTH)
 class ActivityForm(Validatable):
     def __init__(self, **params):
         super().__init__()

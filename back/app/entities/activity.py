@@ -9,7 +9,7 @@ from app.lib.mixin.token_generatable import TokenGeneratable
 
 @model_name('activity')
 @validate('content', BlankValidation)
-@validate('content', MaxLengthValidation, MAX_CONTENT_LENGTH)
+@validate('content', MaxLengthValidation, limit=MAX_CONTENT_LENGTH)
 @validate('token', BlankValidation)
 @validate('session_token', BlankValidation)
 @validate('created_at', BlankValidation)

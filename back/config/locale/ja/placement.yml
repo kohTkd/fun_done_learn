@@ -1,0 +1,8 @@
+model: 配置
+attributes:
+  session_token: セッショントークン
+  activity_token: アクティビティトークン
+  left: 左からの座標
+  top: 上からの座標
+  created_at: 作成日時
+  updated_at: 更新日時

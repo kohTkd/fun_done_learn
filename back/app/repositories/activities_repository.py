@@ -9,7 +9,7 @@ from app.entities.activity import Activity
 @range_key('token')
 @entity_repository(Activity)
 class ActivitiesRepository(ApplicationRepository):
-    def _to_save_format(self, activity) -> dict:
+    def _to_save_format(self, activity: Activity) -> dict:
         return {
             'content': activity.content,
             'token': activity.token,

@@ -66,3 +66,20 @@ resources: # CloudFormation template syntax from here on.
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
+    placements:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: placements
+        AttributeDefinitions:
+          - AttributeName: session_token
+            AttributeType: S
+          - AttributeName: activity_token
+            AttributeType: S
+        KeySchema:
+          - AttributeName: activity_token
+            KeyType: HASH
+          - AttributeName: session_token
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1

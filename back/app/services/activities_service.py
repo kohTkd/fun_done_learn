@@ -8,7 +8,7 @@ class ActivitiesService():
     @classmethod
     def generate(cls, form: ActivityForm) -> Activity:
         if form.is_invalid():
-            raise InvalidParametersError(form.errors)
+            raise InvalidParametersError(form)
         activity = Activity(content=form.content, session_token=form.session_token)
         activity.generate_token()
         return activity

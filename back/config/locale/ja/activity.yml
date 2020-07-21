@@ -1,4 +1,4 @@
-model: 付箋
+model: アクティビティ
 attributes:
   content: 内容
   token: トークン

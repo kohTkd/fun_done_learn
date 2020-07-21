@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from app.controllers.sessions.activities_controller import ActivitiesController
-from app.lib.mixin.respondable import respondable
+from app.controllers.routers.respondable import respondable
 
 namespace = '/sessions/<session_token>/activities'
 app = Blueprint('sessions_activities', __name__)

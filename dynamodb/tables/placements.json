@@ -1,12 +1,12 @@
 {
-  "TableName": "activities",
+  "TableName": "placements",
   "AttributeDefinitions": [
     {
       "AttributeName": "session_token",
       "AttributeType": "S"
     },
     {
-      "AttributeName": "token",
+      "AttributeName": "activity_token",
       "AttributeType": "S"
     }
   ],
@@ -16,7 +16,7 @@
       "KeyType": "HASH"
     },
     {
-        "AttributeName": "token",
+        "AttributeName": "activity_token",
         "KeyType": "RANGE"
     }
   ],

@@ -7,7 +7,7 @@ from app.lib.mixin.validatable import validate
 
 @model_name('session')
 @validate('title', BlankValidation)
-@validate('title', MaxLengthValidation, MAX_TITLE_LENGTH)
+@validate('title', MaxLengthValidation, limit=MAX_TITLE_LENGTH)
 class SessionForm(Validatable):
     def __init__(self, **params):
         super().__init__()

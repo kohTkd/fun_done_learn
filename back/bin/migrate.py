@@ -1,10 +1,12 @@
 import boto3
 import json
 import os
+import sys
 
 
 class DynamoDbMigrator():
-    def __init__(self, region=None):
+    def __init__(self, region=None, logging=None):
+        self.__logging = logging
         self.region = region if region else os.environ['DYNAMODB_REGION']
         self._dynamodb = boto3.resource(
             'dynamodb',
@@ -33,6 +35,10 @@ class DynamoDbMigrator():
         if table_name not in self._table_names:
             self._dynamodb.create_table(**definition)
             self._table_names.append(table_name)
+            if self.__logging:
+                print(f"{table_name} is migrated.")
+        elif self.__logging:
+            print(f"{table_name} already exists.")
 
     def delete(self, table_name):
         self._dynamodb.Table(table_name).delete()
@@ -55,4 +61,4 @@ class DynamoDbMigrator():
 
 
 if __name__ == '__main__':
-    DynamoDbMigrator().migrate_all()
+    DynamoDbMigrator(logging=sys.argv[0]).migrate_all()

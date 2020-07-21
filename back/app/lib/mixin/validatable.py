@@ -2,12 +2,12 @@ from abc import ABCMeta
 from app.validations.validation import Validation
 
 
-def validate(attr_name: str, validation: Validation, check_value=None):
+def validate(attr_name: str, validation: Validation, **kwargs):
     def decoratee(klass):
         if not hasattr(klass, 'registerable_validations'):
             setattr(klass, 'registerable_validations', [])
         klass.registerable_validations.append(
-            {'attr_name': attr_name, 'validation': validation, 'check_value': check_value}
+            {'attr_name': attr_name, 'validation': validation, 'options': kwargs}
         )
         return klass
     return decoratee
@@ -33,9 +33,9 @@ class Validatable(metaclass=ABCMeta):
             self,
             attr_name: str,
             validator_class: Validation,
-            check_value=None):
+            **kwargs):
 
-        validator = validator_class(self, attr_name, check_value)
+        validator = validator_class(self, attr_name, **kwargs)
         validations = [
             v for v in self._validations.get(
                 attr_name, []) if not isinstance(
@@ -56,7 +56,7 @@ class Validatable(metaclass=ABCMeta):
     def __register_validations(self):
         for v in self.registerable_validations:
             self._register_validation(
-                v['attr_name'], v['validation'], v['check_value']
+                v['attr_name'], v['validation'], **v['options']
             )
 
 

@@ -15,10 +15,9 @@ def validation_method(func):
 
 
 class Validation(metaclass=ABCMeta):
-    def __init__(self, model, attr_name, threshold=None):
+    def __init__(self, model, attr_name, **kwargs):
         self._model = model
         self._attr_name = attr_name
-        self._threshold = threshold
         self._valid = None
         self._last_value = None
 

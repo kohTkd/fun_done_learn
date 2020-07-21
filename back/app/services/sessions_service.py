@@ -8,7 +8,7 @@ class SessionsService():
     @classmethod
     def generate(cls, form: SessionForm) -> Session:
         if form.is_invalid():
-            raise InvalidParametersError(form.errors)
+            raise InvalidParametersError(form)
         session = Session(title=form.title)
         session.generate_token()
         return session

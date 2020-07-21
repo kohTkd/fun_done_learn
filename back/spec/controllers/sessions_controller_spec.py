@@ -5,7 +5,7 @@ from app.controllers.sessions_controller import SessionsController
 from app.entities.session import Session
 from app.repositories.sessions_repository import SessionsRepository
 
-from bin.dynamodb_migrator import DynamoDbMigrator
+from bin.migrate import DynamoDbMigrator
 
 
 with description(SessionsController) as self:
