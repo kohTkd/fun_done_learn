@@ -4,6 +4,7 @@ from app.errors.not_found_error import NotFoundError
 from app.forms.activity_form import ActivityForm
 from app.services.sessions_service import SessionsService
 from app.services.activities_service import ActivitiesService
+from app.services.placements_service import PlacementsService
 
 
 class CreateActivityUseCase():
@@ -15,4 +16,6 @@ class CreateActivityUseCase():
 
         activity = ActivitiesService.generate(form)
         ActivitiesService.save(activity)
+
+        PlacementsService.save(activity.placement)
         return activity

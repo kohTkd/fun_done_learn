@@ -6,8 +6,8 @@ class PlacementPresenter():
         return {
             'session_token': self.placement.session_token,
             'activity_token': self.placement.activity_token,
-            'left': self.placement.left,
-            'top': self.placement.top,
+            'left': int(self.placement.left),
+            'top': int(self.placement.top),
             'created_at': str(self.placement.created_at),
             'updated_at': str(self.placement.updated_at)
         }

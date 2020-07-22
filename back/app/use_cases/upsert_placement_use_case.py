@@ -19,10 +19,7 @@ class UpsertPlacementUseCase():
         if not activity:
             raise NotFoundError(Activity, token=form.activity_token)
 
-        placement = PlacementsService.find_or_generate(form.session_token, form.activity_token, form)
-        if placement:
-            placement.update(left=form.left, top=form.top)
-        else:
-            placement = PlacementsService.generate(form)
+        placement = PlacementsService.find_or_build(form.session_token, form.activity_token)
+        placement.update(left=form.left, top=form.top)
         PlacementsService.save(placement)
         return placement

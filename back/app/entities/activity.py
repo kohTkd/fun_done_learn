@@ -1,5 +1,6 @@
 from app.constants.activities import MAX_CONTENT_LENGTH
 from app.entities.application_entity import ApplicationEntity
+from app.entities.placement import Placement
 from app.lib.mixin.validatable import model_name
 from app.validations.blank_validation import BlankValidation
 from app.validations.max_length_validation import MaxLengthValidation
@@ -19,3 +20,16 @@ class Activity(ApplicationEntity, TokenGeneratable):
         self.content = attrs.get('content')
         self.token = attrs.get('token')
         self.session_token = attrs.get('session_token')
+        self._placement = Placement(session_token=self.session_token, activity_token=self.token)
+
+    @property
+    def placement(self):
+        return self._placement
+
+    @placement.setter
+    def placement(self, placement: Placement):
+        self._placement = placement
+
+    def generate_token(self):
+        super().generate_token()
+        self._placement.activity_token = self.token

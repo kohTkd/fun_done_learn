@@ -8,7 +8,7 @@ from app.lib.api_response import ApiResponse
 
 def controller_method(func):
     @functools.wraps(func)
-    def wrapper(*args, **kwargs):
+    def wrapper(*args, **kwargs) -> ApiResponse:
         try:
             return func(*args, **kwargs)
         except (InvalidParametersError, InvalidEntityError) as e:

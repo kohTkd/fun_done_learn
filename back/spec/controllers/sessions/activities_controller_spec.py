@@ -6,6 +6,7 @@ from app.entities.session import Session
 from app.entities.activity import Activity
 from app.repositories.sessions_repository import SessionsRepository
 from app.repositories.activities_repository import ActivitiesRepository
+from app.repositories.placements_repository import PlacementsRepository
 
 from bin.migrate import DynamoDbMigrator
 
@@ -15,6 +16,7 @@ with description(ActivitiesController) as self:
         self.migrator = DynamoDbMigrator('us-east-1')
         self.sessions_respository = SessionsRepository(region_name='us-east-1')
         self.activities_repository = ActivitiesRepository(region_name='us-east-1')
+        self.placements_repository = PlacementsRepository(region_name='us-east-1')
 
     with before.each:
         self.migrator.truncate_all()
@@ -41,16 +43,22 @@ with description(ActivitiesController) as self:
                     expect(response_body).to(have_key('token'))
                     expect(response_body).to(have_key('created_at'))
                     expect(response_body).to(have_key('updated_at'))
+                    response_placement = response.body.get('placement')
+                    expect(response_placement['left']).to(equal(0))
+                    expect(response_placement['top']).to(equal(0))
 
                 with it('saves activity'):
                     response_body = ActivitiesController.create(self.params).body
                     token = response_body['token']
-                    created_at = response_body['created_at']
-                    updated_at = response_body['updated_at']
                     activity = self.activities_repository.find(self.session_token, token)
-                    expect(activity.token).to(equal(token))
-                    expect(str(activity.created_at)).to(equal(created_at))
-                    expect(str(activity.updated_at)).to(equal(updated_at))
+                    expect(activity.content).to(equal(self.content))
+
+                with it('creates placement'):
+                    response_body = ActivitiesController.create(self.params).body
+                    token = response_body['token']
+                    placement = self.placements_repository.find(self.session_token, token)
+                    expect(placement.left).to(equal(0))
+                    expect(placement.top).to(equal(0))
 
             with context('with invalid parameters'):
                 with shared_context('Invalid parameters examples'):
@@ -66,6 +74,11 @@ with description(ActivitiesController) as self:
                         ActivitiesController.create(self.params)
                         activities = self.activities_repository.scan()
                         expect(len(activities)).to(equal(0))
+
+                    with it('does not create placement'):
+                        ActivitiesController.create(self.params)
+                        placements = self.placements_repository.scan()
+                        expect(len(placements)).to(equal(0))
 
                 with context('with blank content'):
                     with before.each:
@@ -101,12 +114,21 @@ with description(ActivitiesController) as self:
                 with it('returns OK response'):
                     response = ActivitiesController.index(self.params)
                     expect(response.status).to(equal(200))
-                    for response_note, activity in zip(response.body, self.activities):
-                        expect(response_note['session_token']).to(equal(activity.session_token))
-                        expect(response_note['token']).to(equal(activity.token))
-                        expect(response_note['content']).to(equal(activity.content))
-                        expect(response_note['created_at']).to(equal(str(activity.created_at)))
-                        expect(response_note['updated_at']).to(equal(str(activity.updated_at)))
+                    for response_activity, activity in zip(response.body, self.activities):
+                        expect(response_activity['session_token']).to(equal(activity.session_token))
+                        expect(response_activity['token']).to(equal(activity.token))
+                        expect(response_activity['content']).to(equal(activity.content))
+                        expect(response_activity['created_at']).to(equal(str(activity.created_at)))
+                        expect(response_activity['updated_at']).to(equal(str(activity.updated_at)))
+
+                        placement = activity.placement
+                        response_placement = response_activity['placement']
+                        expect(response_placement['session_token']).to(equal(placement.session_token))
+                        expect(response_placement['activity_token']).to(equal(placement.activity_token))
+                        expect(int(response_placement['left'])).to(equal(placement.left))
+                        expect(int(response_placement['top'])).to(equal(placement.top))
+                        expect(response_placement['created_at']).to(equal(str(placement.created_at)))
+                        expect(response_placement['updated_at']).to(equal(str(placement.updated_at)))
 
             with before.each:
                 self.session_token = 'SomeToken'
@@ -123,8 +145,26 @@ with description(ActivitiesController) as self:
                     ]
                     self.activities_repository.save(self.activities)
 
-                with included_context('Valid session examples'):
-                    pass
+                with context('when placements are present'):
+                    with before.each:
+                        self.placements = [activity.placement for activity in self.activities]
+                        for placement, i in zip(self.placements, range(2)):
+                            placement.left = i * 10 + 1
+                            placement.top = i * 20 + 1
+                        self.placements_repository.save(self.placements)
+
+                    with included_context('Valid session examples'):
+                        pass
+
+                with context('when placements are absent'):
+                    with before.each:
+                        self.placements = [activity.placement for activity in self.activities]
+                        for placement in self.placements:
+                            placement.left = 0
+                            placement.top = 0
+
+                    with included_context('Valid session examples'):
+                        pass
 
                 with context('when other session is present'):
                     with before.each:

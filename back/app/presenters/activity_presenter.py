@@ -1,3 +1,6 @@
+from app.presenters.placement_presenter import PlacementPresenter
+
+
 class ActivityPresenter():
     def __init__(self, activity):
         self.activity = activity
@@ -8,5 +11,6 @@ class ActivityPresenter():
             'session_token': self.activity.session_token,
             'token': self.activity.token,
             'created_at': str(self.activity.created_at),
-            'updated_at': str(self.activity.updated_at)
+            'updated_at': str(self.activity.updated_at),
+            'placement': PlacementPresenter(self.activity.placement).detail()
         }

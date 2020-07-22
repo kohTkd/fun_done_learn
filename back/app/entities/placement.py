@@ -22,8 +22,8 @@ class Placement(ApplicationEntity):
         super().__init__(**attrs)
         self.session_token = attrs.get('session_token')
         self.activity_token = attrs.get('activity_token')
-        self.left = attrs.get('left')
-        self.top = attrs.get('top')
+        self.left = attrs.get('left', 0)
+        self.top = attrs.get('top', 0)
 
     def update(self, **attrs):
         if 'left' in attrs:
