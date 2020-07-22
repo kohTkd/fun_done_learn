@@ -11,14 +11,18 @@ export default class Activity {
 
   placement: Placement;
 
-  constructor({ session_token, token, content, created_at, updated_at }: ActivityApiInterface) {
+  constructor({ session_token, token, content, created_at, updated_at, placement }: ActivityApiInterface) {
     this.sessionToken = session_token;
     this.token = token;
     this.content = content;
     this.createdAt = created_at;
     this.updatedAt = updated_at;
 
-    this.placement = Placement.default;
+    if (placement) {
+      this.placement = new Placement(placement);
+    } else {
+      this.placement = Placement.default(this.sessionToken, token);
+    }
   }
 
   place(position: Position) {

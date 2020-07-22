@@ -1,3 +1,5 @@
+import { PlacementApiInterface } from './placements';
+
 export interface NewActivityParams {
   session_token: string;
   content: string;
@@ -13,4 +15,5 @@ export interface ActivityApiInterface {
   content: string;
   created_at?: string | Date;
   updated_at?: string | Date;
+  placement?: PlacementApiInterface;
 }

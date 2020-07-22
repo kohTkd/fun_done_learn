@@ -1,6 +1,6 @@
 <template>
   <v-container flued>
-    <v-navigation-drawer app right clipped width="350">
+    <v-navigation-drawer app right clipped width="280">
       <h2>{{ session.title }}</h2>
       <NewActivityStickyNote ref="newActivity" v-bind:sessionToken="session.token" @createActivity="createActivity" />
     </v-navigation-drawer>

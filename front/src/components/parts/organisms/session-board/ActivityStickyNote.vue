@@ -1,5 +1,5 @@
 <template>
-  <VueDragResize :isResizable="false" :parentLimitation="true" :x="x" :y="y" :w="w" :h="h" @dragstop="moved">
+  <VueDragResize :isResizable="false" :parentLimitation="true" :x="x" :y="y" :w="w" :h="h" @dragstop="place">
     <StickyNote>
       <template v-slot:content>
         <div class="viewer">{{ activity.content }}</div>
@@ -14,7 +14,9 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 import VueDragResize from 'vue-drag-resize';
 import Activity from '@/models/activity';
 import StickyNote from '@/components/parts/molecules/StickyNote.vue';
+import Placement from '@/models/placement';
 import Position from '@/models/interfaces/position';
+import PlacementsRepository from '@/repositories/placements-repository';
 
 @Component({
   components: {
@@ -26,8 +28,20 @@ export default class ActivityViewer extends Vue {
   @Prop()
   activity!: Activity;
 
-  moved(position: Position) {
-    this.activity.place(position);
+  place(position: Position) {
+    if (position.left != this.activity.left || position.top != this.activity.top) {
+      this.activity.place(position);
+      this.updatePlacement(this.activity.placement);
+    }
+  }
+
+  private async updatePlacement(placement: Placement) {
+    const sessionToken = placement.sessionToken;
+    const activityToken = placement.activityToken;
+    const params = placement.currentPositionParams;
+    PlacementsRepository.update(params, sessionToken, activityToken).then((placement: Placement) => {
+      this.activity.placement = placement;
+    });
   }
 
   get x(): number {
