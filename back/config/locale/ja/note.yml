@@ -1,0 +1,6 @@
+model: ノート
+attributes:
+  content: 内容
+  session_token: セッショントークン
+  created_at: 作成日時
+  updated_at: 更新日時

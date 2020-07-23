@@ -59,9 +59,9 @@ resources: # CloudFormation template syntax from here on.
           - AttributeName: token
             AttributeType: S
         KeySchema:
-          - AttributeName: token
-            KeyType: HASH
           - AttributeName: session_token
+            KeyType: HASH
+          - AttributeName: token
             KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 1
@@ -76,9 +76,26 @@ resources: # CloudFormation template syntax from here on.
           - AttributeName: activity_token
             AttributeType: S
         KeySchema:
-          - AttributeName: activity_token
-            KeyType: HASH
           - AttributeName: session_token
+            KeyType: HASH
+          - AttributeName: activity_token
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    notes:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: notes
+        AttributeDefinitions:
+          - AttributeName: session_token
+            AttributeType: S
+          - AttributeName: token
+            AttributeType: S
+        KeySchema:
+          - AttributeName: session_token
+            KeyType: HASH
+          - AttributeName: token
             KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 1

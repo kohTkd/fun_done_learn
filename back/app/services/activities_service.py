@@ -24,16 +24,13 @@ class ActivitiesService():
 
     @classmethod
     def query(cls, session_token):
-        activities = ActivitiesRepository().query(session_token)
-        placements = PlacementsRepository().query(session_token)
+        activities = sorted(ActivitiesRepository().query(session_token), key=lambda act: act.token)
+        placements = sorted(PlacementsRepository().query(session_token), key=lambda plc: plc.activity_token)
 
-        for placement in placements:
-            activity = cls.__find_activity(activities, placement.activity_token)
-            if activity:
-                activity.placement = placement
+        placements_count = len(placements)
+        j = 0
+        for i in range(len(activities)):
+            if j < placements_count and activities[i].token == placements[j].activity_token:
+                activities[i].placement = placements[j]
+                j += 1
         return activities
-
-    @classmethod
-    def __find_activity(cls, activities, token):
-        match_activities = [activity for activity in activities if activity.token == token]
-        return match_activities[0] if match_activities else None
