@@ -1,9 +1,9 @@
 import ApplicationForm from '@/models/forms/application-form';
 import { blankValidation, maxLengthValidation } from '@/lib/validations';
-import { MAX_CONTENT_LENGTH } from '@/constants/activities';
-import { NewActivityParams } from '@/models/interfaces/api/activities';
+import { MAX_CONTENT_LENGTH } from '@/constants/notes';
+import { NewNoteParams } from '@/models/interfaces/api/notes';
 
-export default class ActivityForm extends ApplicationForm {
+export default class NoteForm extends ApplicationForm {
   sessionToken!: string;
   content!: string;
   token!: string;
@@ -20,23 +20,18 @@ export default class ActivityForm extends ApplicationForm {
   }
 
   initRules(): void {
-    this.setSessionTokenRules();
     this.setContentRules();
   }
 
-  createParams(): NewActivityParams {
+  createParams(): NewNoteParams {
     return {
       session_token: this.sessionToken,
       content: this.content
     };
   }
 
-  private setSessionTokenRules(): void {
-    this.setRules(['Activity', 'sessionToken'], (messageKey: string) => [blankValidation(messageKey)]);
-  }
-
   private setContentRules(): void {
-    this.setRules(['Activity', 'content'], (messageKey: string) => [
+    this.setRules(['Note', 'content'], (messageKey: string) => [
       blankValidation(messageKey),
       maxLengthValidation(messageKey, MAX_CONTENT_LENGTH)
     ]);

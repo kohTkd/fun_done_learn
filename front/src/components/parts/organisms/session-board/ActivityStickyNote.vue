@@ -74,10 +74,13 @@ export default class ActivityViewer extends Vue {
 .vdr.active::before {
   outline: none;
 }
-.sticky-content {
-  .viewer {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+.sticky-note {
+  position: absolute;
+  .sticky-content {
+    .viewer {
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
   }
 }
 </style>

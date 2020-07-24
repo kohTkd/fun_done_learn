@@ -1,31 +1,22 @@
 <template>
-  <v-container class="px-3 py-6">
-    <StickyNote>
-      <template v-slot:content>
-        <v-form ref="form" v-model="valid" :lazy-validation="true">
-          <v-textarea
-            name="content"
-            :counter="maxContentLength"
-            :rules="contentRules"
-            auto-grow
-            rows="1"
-            v-model="form.content"
-          />
-        </v-form>
-      </template>
-      <template v-slot:menu>
-        <v-btn :disabled="!valid" icon color="brown darken-4" @click="createActivity">
-          <v-icon>mdi-pencil-plus</v-icon>
-        </v-btn>
-      </template>
-    </StickyNote>
-  </v-container>
+  <StickyNote>
+    <template v-slot:content>
+      <v-form ref="form" v-model="valid" :lazy-validation="true">
+        <v-textarea name="content" :counter="maxContentLength" :rules="contentRules" auto-grow rows="1" v-model="form.content" />
+      </v-form>
+    </template>
+    <template v-slot:menu>
+      <v-btn :disabled="!valid" icon color="brown darken-4" @click="createActivity">
+        <v-icon>mdi-pencil-plus</v-icon>
+      </v-btn>
+    </template>
+  </StickyNote>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Emit, Prop } from 'vue-property-decorator';
 import ActivityForm from '@/models/forms/activity-form';
-import { MAX_CONTENT_LENGTH } from '@/constants/activity';
+import { MAX_CONTENT_LENGTH } from '@/constants/activities';
 import StickyNote from '@/components/parts/molecules/StickyNote.vue';
 import VForm from '@/lib/v-form';
 
@@ -78,4 +69,9 @@ export default class NewActivityStickyNote extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.sticky-note {
+  margin-right: auto;
+  margin-left: auto;
+}
+</style>

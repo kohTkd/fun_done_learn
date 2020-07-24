@@ -6,6 +6,10 @@ const attributes = {
   Activity: {
     sessionToken: 'セッショントークン',
     content: '内容'
+  },
+  Note: {
+    sessionToken: 'セッショントークン',
+    content: '内容'
   }
 };
 

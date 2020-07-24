@@ -21,7 +21,7 @@ module.exports = {
       {
         htmlWhitespaceSensitivity: 'ignore',
         singleQuote: true,
-        printWidth: 120
+        printWidth: 140
       }
     ],
     '@typescript-eslint/camelcase': 'off', // APIのレスポンスはスネークケースなので、意図的にスネークケースを使うことがある

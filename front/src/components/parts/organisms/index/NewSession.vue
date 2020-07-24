@@ -26,7 +26,7 @@
 <script lang="ts">
 import { Component, Vue, Emit } from 'vue-property-decorator';
 import SessionForm from '@/models/forms/session-form';
-import { MAX_TITLE_LENGTH } from '@/constants/session';
+import { MAX_TITLE_LENGTH } from '@/constants/sessions';
 
 @Component
 export default class NewSession extends Vue {

@@ -12,13 +12,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 
 @Component
-export default class StickyNote extends Vue {
-  @Prop({ default: false })
-  draggable!: boolean;
-}
+export default class StickyNote extends Vue {}
 </script>
 
 <style scoped lang="scss">
@@ -31,7 +28,7 @@ export default class StickyNote extends Vue {
     linear-gradient(90deg, hsla(60, 100%, 85%, 1), hsla(60, 100%, 85%, 1));
   box-sizing: border-box;
 
-  position: absolute;
+  position: relative;
 
   .sticky-container {
     padding: 0;
