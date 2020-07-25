@@ -1,14 +1,17 @@
 <template>
   <v-container flued>
     <v-navigation-drawer app right clipped width="280">
-      <v-container flued class="px-3 py-6">
-        <v-row no-gutters>
+      <v-container flued class="px-3 py-3">
+        <v-row class="py-3">
           <h2>{{ session.title }}</h2>
         </v-row>
-        <v-row no-gutters>
+        <v-row class="py-3">
           <NewActivityStickyNote ref="newActivity" v-bind:sessionToken="session.token" @createActivity="createActivity" />
         </v-row>
-        <v-row no-gutters>
+        <v-row class="py-3">
+          <Notes v-bind:notes="sortedNotes" />
+        </v-row>
+        <v-row class="py-3">
           <NewNote ref="newNote" v-bind:sessionToken="session.token" @createNote="createNote" />
         </v-row>
       </v-container>
@@ -24,6 +27,8 @@ import { Component, Vue } from 'vue-property-decorator';
 import Board from '@/components/parts/organisms/session-board/Board.vue';
 import NewActivityStickyNote from '@/components/parts/organisms/session-board/NewActivityStickyNote.vue';
 import NewNote from '@/components/parts/organisms/session-board/NewNote.vue';
+import Notes from '@/components/parts/organisms/session-board/Notes.vue';
+
 import Session from '@/models/session';
 import Activity from '@/models/activity';
 import Note from '@/models/note';
@@ -37,7 +42,8 @@ import NotesRepository from '@/repositories/notes-repository';
   components: {
     Board: Board,
     NewActivityStickyNote: NewActivityStickyNote,
-    NewNote: NewNote
+    NewNote: NewNote,
+    Notes: Notes
   }
 })
 export default class SessionBoard extends Vue {
@@ -47,7 +53,7 @@ export default class SessionBoard extends Vue {
 
   created() {
     const token = this.$route.params.token;
-    this.fetchSession(token).then(() => this.fetchContents());
+    this.fetchSession(token).then((session: Session) => this.fetchContents(session.token));
   }
 
   async createActivity(form: ActivityForm) {
@@ -64,23 +70,24 @@ export default class SessionBoard extends Vue {
     });
   }
 
+  get sortedNotes(): Array<Note> {
+    return this.notes.sort((a: Note, b: Note) => a.sortKey - b.sortKey);
+  }
+
   private async fetchSession(token: string): Promise<Session> {
     return SessionsRepository.find(token).then((session: Session) => (this.session = session));
   }
 
-  private fetchContents() {
-    console.log('fetchContents');
-    return Promise.all([this.fetchActivities(), this.fetchNotes()]);
+  private fetchContents(sessionToken: string) {
+    return Promise.all([this.fetchActivities(sessionToken), this.fetchNotes(sessionToken)]);
   }
 
-  private async fetchActivities(): Promise<Array<Activity>> {
-    console.log('fetchActivities');
-    return ActivitiesRepository.fetch(this.session.token).then((activities: Array<Activity>) => (this.activities = activities));
+  private async fetchActivities(sessionToken: string): Promise<Array<Activity>> {
+    return ActivitiesRepository.fetch(sessionToken).then((activities: Array<Activity>) => (this.activities = activities));
   }
 
-  private async fetchNotes(): Promise<Array<Note>> {
-    console.log('fetchNotes');
-    return NotesRepository.fetch(this.session.token).then((notes: Array<Note>) => (this.notes = notes));
+  private async fetchNotes(sessionToken: string): Promise<Array<Note>> {
+    return NotesRepository.fetch(sessionToken).then((notes: Array<Note>) => (this.notes = notes));
   }
 
   private get newActivity(): NewActivityStickyNote {

@@ -1,18 +1,14 @@
 import ApplicationForm from '@/models/forms/application-form';
 import { blankValidation, maxLengthValidation } from '@/lib/validations';
 import { MAX_CONTENT_LENGTH } from '@/constants/notes';
-import { NewNoteParams } from '@/models/interfaces/api/notes';
+import { NewNoteRequest } from '@/models/interfaces/api/notes';
 
 export default class NoteForm extends ApplicationForm {
   sessionToken!: string;
   content!: string;
   token!: string;
 
-  constructor({
-    sessionToken = '',
-    content = '',
-    token = ''
-  }: { sessionToken?: string; content?: string; token?: string } = {}) {
+  constructor({ sessionToken = '', content = '', token = '' }: { sessionToken?: string; content?: string; token?: string } = {}) {
     super();
     this.sessionToken = sessionToken;
     this.content = content;
@@ -23,7 +19,7 @@ export default class NoteForm extends ApplicationForm {
     this.setContentRules();
   }
 
-  createParams(): NewNoteParams {
+  createParams(): NewNoteRequest {
     return {
       session_token: this.sessionToken,
       content: this.content

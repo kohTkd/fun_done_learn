@@ -1,11 +1,11 @@
-export interface UpdatePlacementParams {
+export interface UpdatePlacementRequest {
   session_token: string;
   activity_token: string;
   left: number;
   top: number;
 }
 
-export interface PlacementApiInterface {
+export interface PlacementResponse {
   session_token: string;
   activity_token: string;
   left: number;

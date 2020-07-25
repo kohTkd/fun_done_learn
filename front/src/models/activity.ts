@@ -1,4 +1,6 @@
-import { ActivityApiInterface } from '@/models/interfaces/api/activities';
+import moment from 'moment';
+
+import { ActivityResponse } from '@/models/interfaces/api/activities';
 import Placement from '@/models/placement';
 import Position from '@/models/interfaces/position';
 
@@ -6,17 +8,17 @@ export default class Activity {
   sessionToken: string;
   token: string;
   content: string;
-  createdAt?: string | Date;
-  updatedAt?: string | Date;
+  createdAt: moment.Moment;
+  updatedAt: moment.Moment;
 
   placement: Placement;
 
-  constructor({ session_token, token, content, created_at, updated_at, placement }: ActivityApiInterface) {
+  constructor({ session_token, token, content, created_at, updated_at, placement }: ActivityResponse) {
     this.sessionToken = session_token;
     this.token = token;
     this.content = content;
-    this.createdAt = created_at;
-    this.updatedAt = updated_at;
+    this.createdAt = moment(created_at);
+    this.updatedAt = moment(updated_at);
 
     if (placement) {
       this.placement = new Placement(placement);
@@ -38,6 +40,6 @@ export default class Activity {
   }
 
   static get dummy(): Activity {
-    return new Activity({ session_token: '', token: '', content: '', created_at: '' });
+    return new Activity({ session_token: '', token: '', content: '' });
   }
 }

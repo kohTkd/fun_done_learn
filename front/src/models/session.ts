@@ -1,15 +1,20 @@
+import moment from 'moment';
+import { SessionResponse } from './interfaces/api/sessions';
+
 export default class Session {
   token: string;
   title: string;
-  createdAt: string | Date;
+  createdAt: moment.Moment;
+  updatedAt: moment.Moment;
 
-  constructor({ token, title, created_at }: { token: string; title: string; created_at: string }) {
+  constructor({ token, title, created_at, updated_at }: SessionResponse) {
     this.token = token;
     this.title = title;
-    this.createdAt = created_at;
+    this.createdAt = moment(created_at);
+    this.updatedAt = moment(updated_at);
   }
 
   static get dummy(): Session {
-    return new Session({ token: '', title: '', created_at: '' });
+    return new Session({ token: '', title: '', created_at: '', updated_at: '' });
   }
 }

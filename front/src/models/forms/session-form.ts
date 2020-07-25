@@ -1,7 +1,7 @@
 import ApplicationForm from '@/models/forms/application-form';
 import { blankValidation, maxLengthValidation } from '@/lib/validations';
 import { MAX_TITLE_LENGTH } from '@/constants/sessions';
-import { NewSessionParams } from '@/models/interfaces/api/sessions';
+import { NewSessionRequest } from '@/models/interfaces/api/sessions';
 
 export default class SessionForm extends ApplicationForm {
   token!: string;
@@ -18,7 +18,7 @@ export default class SessionForm extends ApplicationForm {
     this.setTokenRules();
   }
 
-  createParams(): NewSessionParams {
+  createParams(): NewSessionRequest {
     return {
       title: this.title || ''
     };

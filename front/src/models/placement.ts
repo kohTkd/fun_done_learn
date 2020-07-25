@@ -1,4 +1,4 @@
-import { PlacementApiInterface, UpdatePlacementParams } from '@/models/interfaces/api/placements';
+import { PlacementResponse, UpdatePlacementRequest } from '@/models/interfaces/api/placements';
 import Position from '@/models/interfaces/position';
 
 export default class Placement {
@@ -7,7 +7,7 @@ export default class Placement {
   top: number;
   left: number;
 
-  constructor({ session_token, activity_token, top, left }: PlacementApiInterface) {
+  constructor({ session_token, activity_token, top, left }: PlacementResponse) {
     this.sessionToken = session_token;
     this.activityToken = activity_token;
     this.top = top;
@@ -27,7 +27,7 @@ export default class Placement {
     this.left = position.left;
   }
 
-  get currentPositionParams(): UpdatePlacementParams {
+  get currentPositionParams(): UpdatePlacementRequest {
     return {
       session_token: this.sessionToken,
       activity_token: this.activityToken,

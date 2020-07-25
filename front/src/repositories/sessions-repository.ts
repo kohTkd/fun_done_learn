@@ -1,9 +1,9 @@
 import axios from '@/repositories/axios';
 import Session from '@/models/session';
-import { NewSessionParams } from '@/models/interfaces/api/sessions';
+import { NewSessionRequest } from '@/models/interfaces/api/sessions';
 
 export default class SessionsRepository {
-  static async create(params: NewSessionParams): Promise<Session> {
+  static async create(params: NewSessionRequest): Promise<Session> {
     return axios.post('/sessions', params).then(response => new Session(response.data));
   }
 

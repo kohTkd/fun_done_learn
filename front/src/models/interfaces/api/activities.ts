@@ -1,19 +1,19 @@
-import { PlacementApiInterface } from './placements';
+import { PlacementResponse } from './placements';
 
-export interface NewActivityParams {
+export interface NewActivityRequest {
   session_token: string;
   content: string;
 }
 
-export interface UpdateActivityParams extends NewActivityParams {
+export interface UpdateActivityRequest extends NewActivityRequest {
   token: string;
 }
 
-export interface ActivityApiInterface {
+export interface ActivityResponse {
   session_token: string;
   token: string;
   content: string;
-  created_at?: string | Date;
-  updated_at?: string | Date;
-  placement?: PlacementApiInterface;
+  created_at?: Date | string;
+  updated_at?: Date | string;
+  placement?: PlacementResponse;
 }

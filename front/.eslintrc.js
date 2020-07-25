@@ -25,6 +25,7 @@ module.exports = {
       }
     ],
     '@typescript-eslint/camelcase': 'off', // APIのレスポンスはスネークケースなので、意図的にスネークケースを使うことがある
+    '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }]
   },
   overrides: [

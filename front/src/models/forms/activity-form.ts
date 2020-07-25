@@ -1,18 +1,14 @@
 import ApplicationForm from '@/models/forms/application-form';
 import { blankValidation, maxLengthValidation } from '@/lib/validations';
 import { MAX_CONTENT_LENGTH } from '@/constants/activities';
-import { NewActivityParams } from '@/models/interfaces/api/activities';
+import { NewActivityRequest } from '@/models/interfaces/api/activities';
 
 export default class ActivityForm extends ApplicationForm {
   sessionToken!: string;
   content!: string;
   token!: string;
 
-  constructor({
-    sessionToken = '',
-    content = '',
-    token = ''
-  }: { sessionToken?: string; content?: string; token?: string } = {}) {
+  constructor({ sessionToken = '', content = '', token = '' }: { sessionToken?: string; content?: string; token?: string } = {}) {
     super();
     this.sessionToken = sessionToken;
     this.content = content;
@@ -24,7 +20,7 @@ export default class ActivityForm extends ApplicationForm {
     this.setContentRules();
   }
 
-  createParams(): NewActivityParams {
+  createParams(): NewActivityRequest {
     return {
       session_token: this.sessionToken,
       content: this.content

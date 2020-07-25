@@ -1,8 +1,13 @@
 <template>
-  <v-form ref="form" v-model="valid" :lazy-validation="true">
-    <v-textarea name="content" :counter="maxContentLength" :rules="contentRules" rows="3" v-model="form.content" />
-    <OkButton v-bind:disabled="isInvalid" @click="createNote">コメント</OkButton>
-  </v-form>
+  <v-card outlined width="100%">
+    <v-form ref="form" v-model="valid" :lazy-validation="true">
+      <v-textarea outlined name="content" :counter="maxContentLength" :rules="contentRules" rows="2" v-model="form.content" />
+    </v-form>
+    <v-card-actions>
+      <v-spacer />
+      <OkButton v-bind:disabled="isInvalid" @click="createNote" :large="false" :min-width="100">コメント</OkButton>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script lang="ts">
