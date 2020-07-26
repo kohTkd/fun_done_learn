@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from app.controllers.sessions.notes_controller import NotesController
-from app.controllers.routers.respondable import respondable
+from app.controllers.decorators.routers.respondable import respondable
 
 namespace = '/sessions/<session_token>/notes'
 app = Blueprint('sessions_notes', __name__)

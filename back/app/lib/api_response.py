@@ -3,6 +3,7 @@ CREATED = 201
 NOT_FOUND = 404
 UNPROCESSABLE_ENTITY = 422
 
+SUCCEEDED_STATUSES = range(200, 300)
 
 class ApiResponse():
     def __init__(self, body, status):
@@ -24,3 +25,6 @@ class ApiResponse():
     @classmethod
     def not_found(cls, errors):
         return ApiResponse({'errors': errors}, NOT_FOUND)
+
+    def succeeded(self) -> bool:
+        return self.status in SUCCEEDED_STATUSES

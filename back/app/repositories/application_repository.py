@@ -89,6 +89,13 @@ class ApplicationRepository(metaclass=ABCMeta):
     def query(self, key_value):
         return self._build_entities(self._query(key_value))
 
+    def delete(self, hash_key, range_key=None):
+        condition = {}
+        condition[self.hash_key] = hash_key
+        if range_key:
+            condition[self.range_key] = range_key
+        self._table().delete_item(Key=condition)
+
     def _scan(self, **kwargs) -> list:
         response = self._table().scan(**kwargs)
         items = [item for item in response['Items']]

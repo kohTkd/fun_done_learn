@@ -1,0 +1,27 @@
+{
+  "TableName": "connections",
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "session_token",
+      "AttributeType": "S"
+    },
+    {
+      "AttributeName": "id",
+      "AttributeType": "S"
+    }
+  ],
+  "KeySchema": [
+    {
+      "AttributeName": "session_token",
+      "KeyType": "HASH"
+    },
+    {
+        "AttributeName": "id",
+        "KeyType": "RANGE"
+    }
+  ],
+  "ProvisionedThroughput": {
+    "ReadCapacityUnits": 1,
+    "WriteCapacityUnits": 1
+  }
+}

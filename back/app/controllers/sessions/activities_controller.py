@@ -1,4 +1,4 @@
-from app.controllers.controller_method import controller_method
+from app.controllers.decorators.controller_methods import error_handleable
 from app.forms.activity_form import ActivityForm
 from app.use_cases.create_activity_use_case import CreateActivityUseCase
 from app.use_cases.find_activities_use_case import FindActivitiesUseCase
@@ -8,14 +8,14 @@ from app.lib.api_response import ApiResponse
 
 class ActivitiesController():
     @classmethod
-    @controller_method
+    @error_handleable
     def create(cls, params: dict) -> ApiResponse:
         form = ActivityForm(**params)
         activity = CreateActivityUseCase.execute(form)
         return ApiResponse.created(cls._detail(activity))
 
     @classmethod
-    @controller_method
+    @error_handleable
     def index(cls, params: dict) -> ApiResponse:
         activities = FindActivitiesUseCase.execute(params.get('session_token'))
         return ApiResponse.ok(cls._details(activities))
