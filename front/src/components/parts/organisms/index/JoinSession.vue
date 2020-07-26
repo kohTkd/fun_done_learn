@@ -25,6 +25,7 @@
 <script lang="ts">
 import { Component, Vue, Emit } from 'vue-property-decorator';
 import SessionForm from '@/models/forms/session-form';
+import SessionsRepository from '@/repositories/sessions-repository';
 
 @Component
 export default class JoinSession extends Vue {
@@ -36,8 +37,10 @@ export default class JoinSession extends Vue {
   }
 
   @Emit('joinSession')
-  joinSession() {
-    if (this.valid) return this.form;
+  async joinSession() {
+    if (this.valid) {
+      return SessionsRepository.find(this.form.token);
+    }
   }
 
   get tokenRules(): Array<Function> {

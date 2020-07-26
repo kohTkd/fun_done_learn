@@ -32,8 +32,6 @@ import Notes from '@/components/parts/organisms/session-board/Notes.vue';
 import Session from '@/models/session';
 import Activity from '@/models/activity';
 import Note from '@/models/note';
-import ActivityForm from '@/models/forms/activity-form';
-import NoteForm from '@/models/forms/note-form';
 import SessionsRepository from '@/repositories/sessions-repository';
 import ActivitiesRepository from '@/repositories/activities-repository';
 import NotesRepository from '@/repositories/notes-repository';
@@ -50,24 +48,27 @@ export default class SessionBoard extends Vue {
   session = Session.dummy;
   activities = new Array<Activity>();
   notes = new Array<Note>();
+  intervalId?: number;
 
   created() {
     const token = this.$route.params.token;
     this.fetchSession(token).then((session: Session) => this.fetchContents(session.token));
   }
 
-  async createActivity(form: ActivityForm) {
-    ActivitiesRepository.create(form.createParams(), this.session.token).then((activity: Activity) => {
-      this.activities.push(activity);
-      this.newActivity.refresh();
-    });
+  mounted() {
+    this.intervalId = setInterval(() => this.fetchContents(this.session.token), 5000);
   }
 
-  async createNote(form: NoteForm) {
-    NotesRepository.create(form.createParams(), this.session.token).then((note: Note) => {
-      this.notes.push(note);
-      this.newNote.refresh();
-    });
+  beforeDestroy() {
+    clearInterval(this.intervalId);
+  }
+
+  createActivity(activity: Activity) {
+    this.activities.push(activity);
+  }
+
+  createNote(note: Note) {
+    this.notes.push(note);
   }
 
   get sortedNotes(): Array<Note> {

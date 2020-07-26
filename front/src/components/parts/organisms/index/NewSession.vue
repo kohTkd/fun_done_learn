@@ -27,6 +27,7 @@
 import { Component, Vue, Emit } from 'vue-property-decorator';
 import SessionForm from '@/models/forms/session-form';
 import { MAX_TITLE_LENGTH } from '@/constants/sessions';
+import SessionsRepository from '@/repositories/sessions-repository';
 
 @Component
 export default class NewSession extends Vue {
@@ -38,8 +39,10 @@ export default class NewSession extends Vue {
   }
 
   @Emit('createSession')
-  createSession() {
-    if (this.valid) return this.form;
+  async createSession() {
+    if (this.valid) {
+      return SessionsRepository.create(this.form.createParams());
+    }
   }
 
   get titleRules(): Array<Function> {

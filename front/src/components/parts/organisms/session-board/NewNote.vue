@@ -15,6 +15,8 @@ import { Component, Vue, Emit, Prop } from 'vue-property-decorator';
 import NoteForm from '@/models/forms/note-form';
 import { MAX_CONTENT_LENGTH } from '@/constants/notes';
 import VForm from '@/lib/v-form';
+import NotesRepository from '@/repositories/notes-repository';
+import Note from '@/models/note';
 
 @Component
 export default class NewNote extends Vue {
@@ -30,7 +32,12 @@ export default class NewNote extends Vue {
 
   @Emit('createNote')
   createNote() {
-    if (this.valid) return this.form;
+    if (this.valid) {
+      NotesRepository.create(this.form.createParams(), this.sessionToken).then((note: Note) => {
+        this.refresh();
+        return note;
+      });
+    }
   }
 
   refresh() {

@@ -19,6 +19,8 @@ import ActivityForm from '@/models/forms/activity-form';
 import { MAX_CONTENT_LENGTH } from '@/constants/activities';
 import StickyNote from '@/components/parts/molecules/StickyNote.vue';
 import VForm from '@/lib/v-form';
+import ActivitiesRepository from '@/repositories/activities-repository';
+import Activity from '@/models/activity';
 
 @Component({
   components: {
@@ -38,7 +40,12 @@ export default class NewActivityStickyNote extends Vue {
 
   @Emit('createActivity')
   createActivity() {
-    if (this.valid) return this.form;
+    if (this.valid) {
+      ActivitiesRepository.create(this.form.createParams(), this.sessionToken).then((activity: Activity) => {
+        this.refresh();
+        return activity;
+      });
+    }
   }
 
   refresh() {
