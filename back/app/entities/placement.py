@@ -25,8 +25,8 @@ class Placement(ApplicationEntity):
         self.left = attrs.get('left', 0)
         self.top = attrs.get('top', 0)
 
-    def update(self, **attrs):
-        if 'left' in attrs:
-            self.left = attrs.get('left')
-        if 'top' in attrs:
-            self.top = attrs.get('top')
+    def _attribute_names(self):
+        return ('session_token', 'activity_token', 'left', 'top')
+
+    def _updatable_attribute_names(self):
+        return ('left', 'top')

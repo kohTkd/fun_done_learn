@@ -1,4 +1,3 @@
-from app.entities.session import Session
 from app.services.sessions_service import SessionsService
 from app.services.connections_service import ConnectionsService
 

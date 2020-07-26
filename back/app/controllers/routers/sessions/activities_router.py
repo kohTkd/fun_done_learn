@@ -18,3 +18,11 @@ def create(session_token):
 @respondable
 def index(session_token):
     return ActivitiesController.index({'session_token': session_token})
+
+
+@app.route(f"{namespace}/<token>", methods=['PATCH'])
+@respondable
+def update(session_token, token):
+    params = request.get_json()
+    params.update({'session_token': session_token, 'token': token})
+    return ActivitiesController.update(params)

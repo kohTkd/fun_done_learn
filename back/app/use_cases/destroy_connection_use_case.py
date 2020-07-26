@@ -1,7 +1,6 @@
 from app.entities.session import Session
 from app.entities.connection import Connection
 from app.errors.not_found_error import NotFoundError
-from app.forms.connection_form import ConnectionForm
 from app.services.sessions_service import SessionsService
 from app.services.connections_service import ConnectionsService
 

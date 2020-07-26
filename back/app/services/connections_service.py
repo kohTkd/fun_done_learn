@@ -30,7 +30,7 @@ class ConnectionsService():
 
     @classmethod
     def bloadcast(cls, connection_ids, body, resource_name, action):
-        gatewayapi = boto3.client("apigatewaymanagementapi", endpoint_url = os.environ.get('API_GATEWAY_ENDPOINT'))
-        data = {'resource': resource_name, 'action': action, 'body': body }
+        gatewayapi = boto3.client("apigatewaymanagementapi", endpoint_url=os.environ.get('API_GATEWAY_ENDPOINT'))
+        data = {'resource': resource_name, 'action': action, 'body': body}
         for id in connection_ids:
             gatewayapi.post_to_connection(ConnectionId=id, Data=json.dumps(data).encode('utf-8'))

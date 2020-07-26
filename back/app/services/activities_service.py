@@ -34,3 +34,8 @@ class ActivitiesService():
                 activities[i].placement = placements[j]
                 j += 1
         return activities
+
+    @classmethod
+    def update(cls, activity, form):
+        activity.update(content=form.content)
+        return cls.save(activity)

@@ -2,6 +2,7 @@ from app.controllers.decorators.controller_methods import error_handleable
 from app.forms.activity_form import ActivityForm
 from app.use_cases.create_activity_use_case import CreateActivityUseCase
 from app.use_cases.find_activities_use_case import FindActivitiesUseCase
+from app.use_cases.update_activity_use_case import UpdateActivityUseCase
 from app.presenters.activity_presenter import ActivityPresenter
 from app.lib.api_response import ApiResponse
 
@@ -19,6 +20,13 @@ class ActivitiesController():
     def index(cls, params: dict) -> ApiResponse:
         activities = FindActivitiesUseCase.execute(params.get('session_token'))
         return ApiResponse.ok(cls._details(activities))
+
+    @classmethod
+    @error_handleable
+    def update(cls, params: dict) -> ApiResponse:
+        form = ActivityForm(**params)
+        activity = UpdateActivityUseCase.execute(form)
+        return ApiResponse.ok(cls._detail(activity))
 
     @classmethod
     def _detail(cls, activity) -> dict:

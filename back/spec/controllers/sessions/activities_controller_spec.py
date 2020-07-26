@@ -192,3 +192,96 @@ with description(ActivitiesController) as self:
                 expect(response.status).to(equal(404))
                 response_body = response.body
                 expect(response.body['errors']).to(equal('セッションが見つかりません'))
+
+    with description('update()'):
+        with context('when specified session is present'):
+            with before.each:
+                self.session_token = 'SomeToken'
+                self.session = Session(token=self.session_token, title='Some Title')
+                self.sessions_respository.save(self.session)
+
+            with context('when specified activity is present'):
+                with before.each:
+                    self.token = 'ActivityToken'
+                    self.activity = Activity(session_token=self.session.token, token=self.token, content='Content')
+                    self.activities_repository.save(self.activity)
+
+                with context('with valid parameters'):
+                    with before.each:
+                        self.content = 'This is a valid Content'
+                        self.params = {
+                            'content': self.content, 'session_token': self.session_token, 'token': self.token
+                        }
+
+                    with it('returns OK response'):
+                        response = ActivitiesController.update(self.params)
+                        expect(response.status).to(equal(200))
+                        response_body = response.body
+                        expect(response_body['content']).to(equal(self.content))
+                        expect(response_body['session_token']).to(equal(self.session_token))
+                        expect(response_body['token']).to(equal(self.token))
+                        expect(response_body['content']).to(equal(self.content))
+                        expect(response_body).to(have_key('created_at'))
+                        expect(response_body).to(have_key('updated_at'))
+
+                    with it('updates activity'):
+                        ActivitiesController.update(self.params).body
+                        activity = self.activities_repository.find(self.session_token, self.token)
+                        expect(activity.content).to(equal(self.content))
+                        expect(activity.updated_at).not_to(equal(self.activity.updated_at))
+
+                with context('with invalid parameters'):
+                    with shared_context('Invalid parameters examples'):
+                        with before.each:
+                            self.params = {
+                                'content': self.content, 'session_token': self.session_token, 'token': self.token
+                            }
+
+                        with it('returns Unprocessable Entity error'):
+                            response = ActivitiesController.update(self.params)
+                            expect(response.status).to(equal(422))
+                            expect(response.body['errors']).to(equal(self.error_messages))
+
+                        with it('does not update activity'):
+                            ActivitiesController.update(self.params)
+                            activity = self.activities_repository.find(self.session_token, self.token)
+                            expect(activity.content).to(equal(self.activity.content))
+                            expect(activity.updated_at).to(equal(self.activity.updated_at))
+
+                    with context('with blank content'):
+                        with before.each:
+                            self.content = ''
+                            self.error_messages = ['内容は必須です']
+
+                        with included_context('Invalid parameters examples'):
+                            pass
+
+                    with context('with too long title'):
+                        with before.each:
+                            self.content = 'A' * 101
+                            self.error_messages = ['内容は100文字以内で設定してください']
+
+                        with included_context('Invalid parameters examples'):
+                            pass
+
+            with context('when specified activity is absent'):
+                with before.each:
+                    self.params = {'content': 'Content', 'session_token': self.session.token, 'token': 'InvalidToken'}
+
+                with it('returns Not Found response'):
+                    response = ActivitiesController.update(self.params)
+                    expect(response.status).to(equal(404))
+                    response_body = response.body
+                    expect(response.body['errors']).to(equal('アクティビティが見つかりません'))
+
+        with context('when specified session is absent'):
+            with before.each:
+                self.session_token = 'SomeToken'
+                self.content = 'This is a valid Content'
+                self.params = {'content': self.content, 'session_token': self.session_token}
+
+            with it('returns Not Found response'):
+                response = ActivitiesController.update(self.params)
+                expect(response.status).to(equal(404))
+                response_body = response.body
+                expect(response.body['errors']).to(equal('セッションが見つかりません'))

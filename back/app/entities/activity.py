@@ -17,9 +17,6 @@ from app.lib.mixin.token_generatable import TokenGeneratable
 class Activity(ApplicationEntity, TokenGeneratable):
     def __init__(self, **attrs):
         super().__init__(**attrs)
-        self.content = attrs.get('content')
-        self.token = attrs.get('token')
-        self.session_token = attrs.get('session_token')
         self._placement = Placement(session_token=self.session_token, activity_token=self.token)
 
     @property
@@ -33,3 +30,9 @@ class Activity(ApplicationEntity, TokenGeneratable):
     def generate_token(self):
         super().generate_token()
         self._placement.activity_token = self.token
+
+    def _attribute_names(self):
+        return ('session_token', 'token', 'content')
+
+    def _updatable_attribute_names(self):
+        return ('content',)

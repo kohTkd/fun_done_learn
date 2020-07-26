@@ -19,6 +19,7 @@ def error_handleable(func):
             return ApiResponse.not_found(e.error_messages())
     return wrapper
 
+
 def bloadcastable(resource_name: str, action: str):
     def _bloadcastable(func):
         def wrapper(*args, **kwargs) -> ApiResponse:

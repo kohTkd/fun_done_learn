@@ -5,6 +5,7 @@ UNPROCESSABLE_ENTITY = 422
 
 SUCCEEDED_STATUSES = range(200, 300)
 
+
 class ApiResponse():
     def __init__(self, body, status):
         self.body = body

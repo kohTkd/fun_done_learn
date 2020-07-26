@@ -17,3 +17,9 @@ class Session(ApplicationEntity, TokenGeneratable):
         super().__init__(**attrs)
         self.title = attrs.get('title')
         self.token = attrs.get('token')
+
+    def _attribute_names(self):
+        return ('token', 'title')
+
+    def _updatable_attribute_names(self):
+        return ('title',)

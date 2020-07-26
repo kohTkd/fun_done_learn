@@ -13,4 +13,5 @@ class ActivityForm(Validatable):
     def __init__(self, **params):
         super().__init__()
         self.session_token = params.get('session_token')
+        self.token = params.get('token')
         self.content = params.get('content')

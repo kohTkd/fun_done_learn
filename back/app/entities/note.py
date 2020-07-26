@@ -13,8 +13,8 @@ from app.lib.mixin.token_generatable import TokenGeneratable
 @validate('session_token', BlankValidation)
 @validate('token', BlankValidation)
 class Note(ApplicationEntity, TokenGeneratable):
-    def __init__(self, **attrs):
-        super().__init__(**attrs)
-        self.content = attrs.get('content')
-        self.token = attrs.get('token')
-        self.session_token = attrs.get('session_token')
+    def _attribute_names(self):
+        return ('session_token', 'token', 'content')
+
+    def _updatable_attribute_names(self):
+        return ('content',)

@@ -1,4 +1,4 @@
-from abc import ABCMeta
+from abc import ABCMeta, abstractmethod
 import datetime
 
 import dateutil.parser
@@ -9,6 +9,7 @@ from app.lib.mixin.validatable import Validatable
 class ApplicationEntity(Validatable, metaclass=ABCMeta):
     def __init__(self, **attrs):
         super().__init__()
+        self._set_attributes(self._attribute_names, **attrs)
         if attrs.get('persisted'):
             self._persisted = True
             self._restore_timestamp(attrs, 'created_at')
@@ -24,6 +25,23 @@ class ApplicationEntity(Validatable, metaclass=ABCMeta):
             self.created_at = now
         if hasattr(self, 'updated_at'):
             self.updated_at = now
+
+    def update(self, **attrs):
+        self._set_attributes(self._updatable_attribute_names, **attrs)
+
+    def _set_attributes(self, attribute_names, **attrs):
+        for attr_name in attribute_names():
+            if attr_name in attrs:
+                setattr(self, attr_name, attrs[attr_name])
+            elif not hasattr(self, attr_name):
+                setattr(self, attr_name, None)
+
+    @abstractmethod
+    def _attribute_names(self):
+        raise NotImplementedError()
+
+    def _updatable_attribute_names(self):
+        return []
 
     def persist(self):
         self.persisted = True
