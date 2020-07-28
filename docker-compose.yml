@@ -37,6 +37,6 @@ services:
       - dynamodb-data:/home/dynamodblocal/data
     entrypoint:
       - java
-    command: ["-jar", "DynamoDBLocal.jar"]
+    command: ["-jar", "DynamoDBLocal.jar", "-dbpath", "/home/dynamodblocal/data"]
     ports:
       - "8000:8000"

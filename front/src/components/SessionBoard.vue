@@ -1,34 +1,20 @@
 <template>
   <v-container flued>
     <v-navigation-drawer app right clipped width="280">
-      <v-container flued class="px-3 py-3">
-        <v-row class="py-3">
-          <h2>{{ session.title }}</h2>
-        </v-row>
-        <v-row class="py-3">
-          <NewActivityStickyNote ref="newActivity" v-bind:sessionToken="session.token" @createActivity="createActivity" />
-        </v-row>
-        <v-row class="py-3">
-          <Notes v-bind:notes="sortedNotes" />
-        </v-row>
-        <v-row class="py-3">
-          <NewNote ref="newNote" v-bind:sessionToken="session.token" @createNote="createNote" />
-        </v-row>
-      </v-container>
+      <SideMenu v-bind:session="session" v-bind:notes="notes" @createActivity="createActivity" @createNote="createNote" />
     </v-navigation-drawer>
     <div class="session-board">
-      <Board v-bind:activities="activities" />
+      <Board v-bind:activities="activities" @replaced="replaced" @update="updateActivity" />
     </div>
   </v-container>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Board from '@/components/parts/organisms/session-board/Board.vue';
-import NewActivityStickyNote from '@/components/parts/organisms/session-board/NewActivityStickyNote.vue';
-import NewNote from '@/components/parts/organisms/session-board/NewNote.vue';
-import Notes from '@/components/parts/organisms/session-board/Notes.vue';
+import Board from '@/components/parts/organisms/session-board/boards/Board.vue';
+import SideMenu from '@/components/parts/organisms/session-board/SideMenu.vue';
 
+import { POLLING_DURATION } from '@/constants/sessions';
 import Session from '@/models/session';
 import Activity from '@/models/activity';
 import Note from '@/models/note';
@@ -39,9 +25,7 @@ import NotesRepository from '@/repositories/notes-repository';
 @Component({
   components: {
     Board: Board,
-    NewActivityStickyNote: NewActivityStickyNote,
-    NewNote: NewNote,
-    Notes: Notes
+    SideMenu: SideMenu
   }
 })
 export default class SessionBoard extends Vue {
@@ -56,19 +40,42 @@ export default class SessionBoard extends Vue {
   }
 
   mounted() {
-    this.intervalId = setInterval(() => this.fetchContents(this.session.token), 5000);
+    this.setInterval();
   }
 
   beforeDestroy() {
-    clearInterval(this.intervalId);
+    this.clearInterval();
   }
 
   createActivity(activity: Activity) {
-    this.activities.push(activity);
+    if (activity) this.activities.push(activity);
+    this.resetInterval();
+  }
+
+  updateActivity(activity: Activity) {
+    this.activities.find(act => act.token === activity.token)?.update({ content: activity.content });
   }
 
   createNote(note: Note) {
-    this.notes.push(note);
+    if (note) this.notes.push(note);
+    this.resetInterval();
+  }
+
+  replaced(_activity?: Activity) {
+    this.resetInterval();
+  }
+
+  setInterval() {
+    this.intervalId = setInterval(() => this.fetchContents(this.session.token), POLLING_DURATION);
+  }
+
+  clearInterval() {
+    clearInterval(this.intervalId);
+  }
+
+  resetInterval() {
+    this.clearInterval();
+    this.setInterval();
   }
 
   get sortedNotes(): Array<Note> {
@@ -89,16 +96,6 @@ export default class SessionBoard extends Vue {
 
   private async fetchNotes(sessionToken: string): Promise<Array<Note>> {
     return NotesRepository.fetch(sessionToken).then((notes: Array<Note>) => (this.notes = notes));
-  }
-
-  private get newActivity(): NewActivityStickyNote {
-    // eslint-disable-next-line
-    return (this.$refs as any).newActivity as NewActivityStickyNote;
-  }
-
-  private get newNote(): NewNote {
-    // eslint-disable-next-line
-    return (this.$refs as any).newNote as NewNote;
   }
 }
 </script>

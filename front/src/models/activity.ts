@@ -31,12 +31,20 @@ export default class Activity {
     this.placement.moveTo(position);
   }
 
+  update({ content }: { content: string }) {
+    this.content = content;
+  }
+
   get left() {
     return this.placement.left;
   }
 
   get top() {
     return this.placement.top;
+  }
+
+  get isPresent(): boolean {
+    return this.sessionToken.length > 0 && this.token.length > 0 && this.content.length > 0;
   }
 
   static get dummy(): Activity {

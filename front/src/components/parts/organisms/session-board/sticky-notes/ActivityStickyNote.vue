@@ -1,46 +1,77 @@
 <template>
-  <VueDragResize :isResizable="false" :parentLimitation="true" :x="x" :y="y" :w="w" :h="h" @dragstop="place">
-    <StickyNote>
-      <template v-slot:content>
-        <div class="viewer">{{ activity.content }}</div>
-      </template>
-      <template v-slot:menu />
-    </StickyNote>
+  <VueDragResize :isDraggable="draggable" :isResizable="false" :parentLimitation="true" :x="x" :y="y" :w="w" :h="h" @dragstop="replace">
+    <ViewActivityStickyNote v-show="!editable" v-bind:activity="currentActivity" @edit="edit" />
+    <EditActivityStickyNote v-if="editable" v-bind:activity="currentActivity" @update="update" @cancel="show" />
   </VueDragResize>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Vue, Prop, Emit, Watch } from 'vue-property-decorator';
 import VueDragResize from 'vue-drag-resize';
 import Activity from '@/models/activity';
-import StickyNote from '@/components/parts/molecules/StickyNote.vue';
+import ViewActivityStickyNote from '@/components/parts/organisms/session-board/sticky-notes/ViewActivityStickyNote.vue';
+import EditActivityStickyNote from '@/components/parts/organisms/session-board/sticky-notes/EditActivityStickyNote.vue';
 import Placement from '@/models/placement';
 import Position from '@/models/interfaces/position';
 import PlacementsRepository from '@/repositories/placements-repository';
 
 @Component({
   components: {
-    StickyNote: StickyNote,
+    ViewActivityStickyNote: ViewActivityStickyNote,
+    EditActivityStickyNote,
     VueDragResize: VueDragResize
   }
 })
-export default class ActivityViewer extends Vue {
+export default class ActivityStickyNote extends Vue {
   @Prop()
   activity!: Activity;
 
-  place(position: Position) {
+  currentActivity = Activity.dummy;
+
+  editable = false;
+  draggable = true;
+
+  created() {
+    this.currentActivity = this.activity;
+  }
+
+  @Watch('activity')
+  onUpdateActivity(newActivity: Activity, _oldActivity: Activity) {
+    this.currentActivity = newActivity;
+  }
+
+  @Emit('replaced')
+  replace(position: Position) {
     if (position.left != this.activity.left || position.top != this.activity.top) {
       this.activity.place(position);
-      this.updatePlacement(this.activity.placement);
+      return this.updatePlacement(this.activity.placement);
     }
+  }
+
+  @Emit('update')
+  update(activity: Activity) {
+    this.currentActivity.update({ content: activity.content });
+    this.show();
+    return activity;
+  }
+
+  edit() {
+    this.editable = true;
+    this.draggable = false;
+  }
+
+  show() {
+    this.editable = false;
+    this.draggable = true;
   }
 
   private async updatePlacement(placement: Placement) {
     const sessionToken = placement.sessionToken;
     const activityToken = placement.activityToken;
     const params = placement.currentPositionParams;
-    PlacementsRepository.update(params, sessionToken, activityToken).then((placement: Placement) => {
+    return PlacementsRepository.update(params, sessionToken, activityToken).then((placement: Placement) => {
       this.activity.placement = placement;
+      return this.activity;
     });
   }
 

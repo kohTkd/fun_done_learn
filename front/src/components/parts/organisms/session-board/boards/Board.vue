@@ -5,14 +5,14 @@
       <BoardCircle v-bind:done="true" />
       <BoardCircle v-bind:learn="true" />
     </div>
-    <ActivityStickyNote v-for="activity in activities" v-bind:activity="activity" v-bind:key="activity.token" />
+    <ActivityStickyNote v-for="activity in activities" v-bind:activity="activity" v-bind:key="activity.token" @replaced="replaced" />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
-import BoardCircle from '@/components/parts/organisms/session-board/BoardCircle.vue';
-import ActivityStickyNote from '@/components/parts/organisms/session-board/ActivityStickyNote.vue';
+import { Component, Vue, Prop, Emit } from 'vue-property-decorator';
+import BoardCircle from '@/components/parts/organisms/session-board/boards/BoardCircle.vue';
+import ActivityStickyNote from '@/components/parts/organisms/session-board/sticky-notes/ActivityStickyNote.vue';
 import Activity from '@/models/activity';
 
 @Component({
@@ -24,6 +24,16 @@ import Activity from '@/models/activity';
 export default class Board extends Vue {
   @Prop({ default: [] })
   activities!: Array<Activity>;
+
+  @Emit('update')
+  update(activity: Activity) {
+    return activity;
+  }
+
+  @Emit('replaced')
+  replaced(activity?: Activity) {
+    return activity;
+  }
 }
 </script>
 

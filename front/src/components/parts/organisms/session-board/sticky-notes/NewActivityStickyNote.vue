@@ -6,8 +6,8 @@
       </v-form>
     </template>
     <template v-slot:menu>
-      <v-btn :disabled="!valid" icon color="brown darken-4" @click="createActivity">
-        <v-icon>mdi-pencil-plus</v-icon>
+      <v-btn :disabled="!valid" icon small color="brown darken-4" @click="createActivity">
+        <v-icon>mdi-send</v-icon>
       </v-btn>
     </template>
   </StickyNote>
