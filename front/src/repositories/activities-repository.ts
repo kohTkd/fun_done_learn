@@ -15,6 +15,10 @@ export default class ActivitiesRepository {
     return axios.patch(this.pathTo(sessionToken, token), params).then(response => new Activity(response.data));
   }
 
+  static async destroy(sessionToken: string, token: string) {
+    return axios.delete(this.pathTo(sessionToken, token));
+  }
+
   private static pathTo(sessionToken: string, token?: string): string {
     const path = `/sessions/${sessionToken}/activities`;
     if (!token) return path;

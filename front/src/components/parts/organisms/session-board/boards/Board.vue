@@ -5,7 +5,14 @@
       <BoardCircle v-bind:done="true" />
       <BoardCircle v-bind:learn="true" />
     </div>
-    <ActivityStickyNote v-for="activity in activities" v-bind:activity="activity" v-bind:key="activity.token" @replaced="replaced" />
+    <ActivityStickyNote
+      v-for="activity in activities"
+      v-bind:activity="activity"
+      v-bind:key="activity.token"
+      @replaced="replaced"
+      @updateActivitiy="updateActivity"
+      @destroyActivity="destroyActivity"
+    />
   </div>
 </template>
 
@@ -25,13 +32,18 @@ export default class Board extends Vue {
   @Prop({ default: [] })
   activities!: Array<Activity>;
 
-  @Emit('update')
-  update(activity: Activity) {
+  @Emit('updateActivity')
+  updateActivity(activity: Activity) {
     return activity;
   }
 
   @Emit('replaced')
   replaced(activity?: Activity) {
+    return activity;
+  }
+
+  @Emit('destroyActivity')
+  destroyActivity(activity: Activity) {
     return activity;
   }
 }

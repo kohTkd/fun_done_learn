@@ -27,6 +27,10 @@ export default class Placement {
     this.left = position.left;
   }
 
+  isSamePosition(placement: Placement): boolean {
+    return this.top === placement.top && this.left === placement.left;
+  }
+
   get currentPositionParams(): UpdatePlacementRequest {
     return {
       session_token: this.sessionToken,

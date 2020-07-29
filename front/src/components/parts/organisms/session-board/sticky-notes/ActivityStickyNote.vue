@@ -1,7 +1,7 @@
 <template>
   <VueDragResize :isDraggable="draggable" :isResizable="false" :parentLimitation="true" :x="x" :y="y" :w="w" :h="h" @dragstop="replace">
-    <ViewActivityStickyNote v-show="!editable" v-bind:activity="currentActivity" @edit="edit" />
-    <EditActivityStickyNote v-if="editable" v-bind:activity="currentActivity" @update="update" @cancel="show" />
+    <ViewActivityStickyNote v-show="!editable" v-bind:activity="currentActivity" @edit="edit" @destroyActivity="destroyActivity" />
+    <EditActivityStickyNote v-if="editable" v-bind:activity="currentActivity" @updateActivity="updateActivity" @cancel="show" />
   </VueDragResize>
 </template>
 
@@ -48,10 +48,15 @@ export default class ActivityStickyNote extends Vue {
     }
   }
 
-  @Emit('update')
-  update(activity: Activity) {
+  @Emit('updateActivity')
+  updateActivity(activity: Activity) {
     this.currentActivity.update({ content: activity.content });
     this.show();
+    return activity;
+  }
+
+  @Emit('destroyActivity')
+  destroyActivity(activity: Activity) {
     return activity;
   }
 

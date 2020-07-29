@@ -31,8 +31,15 @@ export default class Activity {
     this.placement.moveTo(position);
   }
 
-  update({ content }: { content: string }) {
+  update({ content, placement }: { content: string; placement?: Placement }) {
     this.content = content;
+    if (placement) {
+      this.placement.moveTo({ top: placement.top, left: this.placement.left });
+    }
+  }
+
+  isSamePosition(placement: Placement): boolean {
+    return this.placement.isSamePosition(placement);
   }
 
   get left() {

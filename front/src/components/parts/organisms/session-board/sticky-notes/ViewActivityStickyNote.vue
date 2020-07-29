@@ -7,7 +7,7 @@
       <v-btn icon small color="brown darken-4" @click="edit">
         <v-icon>mdi-pencil</v-icon>
       </v-btn>
-      <v-btn icon small olor="brown darken-4" @click="destroy">
+      <v-btn icon small olor="brown darken-4" @click="destroyActivity">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </template>
@@ -18,6 +18,7 @@
 import { Component, Vue, Prop, Emit, Watch } from 'vue-property-decorator';
 import Activity from '@/models/activity';
 import StickyNote from '@/components/parts/molecules/StickyNote.vue';
+import ActivitiesRepository from '@/repositories/activities-repository';
 
 @Component({
   components: {
@@ -40,7 +41,10 @@ export default class ViewActivityStickyNote extends Vue {
     return event;
   }
 
-  destroy() {}
+  @Emit('destroyActivity')
+  destroyActivity() {
+    return ActivitiesRepository.destroy(this.activity.sessionToken, this.activity.token).then(() => this.activity);
+  }
 }
 </script>
 

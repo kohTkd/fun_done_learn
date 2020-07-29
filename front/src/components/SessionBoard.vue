@@ -4,7 +4,7 @@
       <SideMenu v-bind:session="session" v-bind:notes="notes" @createActivity="createActivity" @createNote="createNote" />
     </v-navigation-drawer>
     <div class="session-board">
-      <Board v-bind:activities="activities" @replaced="replaced" @update="updateActivity" />
+      <Board v-bind:activities="activities" @replaced="replaced" @updateActivity="updateActivity" @destroyActivity="destroyActivity" />
     </div>
   </v-container>
 </template>
@@ -53,7 +53,26 @@ export default class SessionBoard extends Vue {
   }
 
   updateActivity(activity: Activity) {
-    this.activities.find(act => act.token === activity.token)?.update({ content: activity.content });
+    const foundActivity = this.activities.find(act => act.token === activity.token);
+    if (!foundActivity) return false;
+    if (foundActivity.content === activity.content && foundActivity.isSamePosition(activity.placement)) return true;
+
+    foundActivity.update({ content: activity.content, placement: activity.placement });
+    return true;
+  }
+
+  updateNote(note: Note) {
+    const foundNote = this.notes.find(act => act.token === note.token);
+    if (!foundNote) return false;
+    if (foundNote.content === note.content) return true;
+  }
+
+  destroyActivity(activity: Activity) {
+    const index = this.activities.findIndex(act => act.token === activity.token);
+    if (index >= 0) {
+      this.activities.splice(index, 1);
+    }
+    this.resetInterval();
   }
 
   createNote(note: Note) {
@@ -78,10 +97,6 @@ export default class SessionBoard extends Vue {
     this.setInterval();
   }
 
-  get sortedNotes(): Array<Note> {
-    return this.notes.sort((a: Note, b: Note) => a.sortKey - b.sortKey);
-  }
-
   private async fetchSession(token: string): Promise<Session> {
     return SessionsRepository.find(token).then((session: Session) => (this.session = session));
   }
@@ -91,11 +106,34 @@ export default class SessionBoard extends Vue {
   }
 
   private async fetchActivities(sessionToken: string): Promise<Array<Activity>> {
-    return ActivitiesRepository.fetch(sessionToken).then((activities: Array<Activity>) => (this.activities = activities));
+    return ActivitiesRepository.fetch(sessionToken).then((activities: Array<Activity>) => {
+      this.updateContents(this.activities, activities, this.updateActivity);
+      return this.activities;
+    });
   }
 
   private async fetchNotes(sessionToken: string): Promise<Array<Note>> {
-    return NotesRepository.fetch(sessionToken).then((notes: Array<Note>) => (this.notes = notes));
+    return NotesRepository.fetch(sessionToken).then((notes: Array<Note>) => {
+      this.updateContents(this.notes, notes, this.updateNote);
+      return this.notes;
+    });
+  }
+
+  private updateContents(originals: Array<Activity | Note>, others: Array<Activity | Note>, updateStrategy: Function) {
+    others.forEach((other: Activity | Note) => {
+      if (!updateStrategy(other)) {
+        originals.push(other);
+        console.log(other);
+      }
+    });
+
+    let length = originals.length;
+    for (let i = 0; i < length; i++) {
+      if (!others.some(other => other.token === originals[i].token)) {
+        originals.splice(i--, 1);
+        length--;
+      }
+    }
   }
 }
 </script>

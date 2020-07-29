@@ -6,7 +6,7 @@
       </v-form>
     </template>
     <template v-slot:menu>
-      <v-btn :disabled="!valid" icon small color="brown darken-4" @click="createActivity">
+      <v-btn :disabled="!valid" icon small color="brown darken-4" @click="create">
         <v-icon>mdi-send</v-icon>
       </v-btn>
     </template>
@@ -39,9 +39,9 @@ export default class NewActivityStickyNote extends Vue {
   }
 
   @Emit('createActivity')
-  createActivity() {
+  create() {
     if (this.valid) {
-      ActivitiesRepository.create(this.form.createParams(), this.sessionToken).then((activity: Activity) => {
+      return ActivitiesRepository.create(this.form.createParams(), this.sessionToken).then((activity: Activity) => {
         this.refresh();
         return activity;
       });
