@@ -26,3 +26,9 @@ def update(session_token, token):
     params = request.get_json()
     params.update({'session_token': session_token, 'token': token})
     return ActivitiesController.update(params)
+
+
+@app.route(f"{namespace}/<token>", methods=['DELETE'])
+@respondable
+def destroy(session_token, token):
+    return ActivitiesController.destroy({'session_token': session_token, 'token': token})

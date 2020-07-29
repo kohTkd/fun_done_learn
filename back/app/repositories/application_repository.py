@@ -80,6 +80,8 @@ class ApplicationRepository(metaclass=ABCMeta):
             if not item:
                 raise NotFoundError(self.entity_class)
             return self._build_entity(item)
+        except NotFoundError:
+            return None
         except ClientError:
             return None
 
@@ -89,12 +91,11 @@ class ApplicationRepository(metaclass=ABCMeta):
     def query(self, key_value):
         return self._build_entities(self._query(key_value))
 
-    def delete(self, hash_key, range_key=None):
-        condition = {}
-        condition[self.hash_key] = hash_key
-        if range_key:
-            condition[self.range_key] = range_key
-        self._table().delete_item(Key=condition)
+    def destroy(self, entity):
+        if isinstance(entity, list):
+            return self._destroy_entities(entity)
+        self._table().delete_item(Key=self._build_condition(entity))
+        return entity.persist()
 
     def _scan(self, **kwargs) -> list:
         response = self._table().scan(**kwargs)
@@ -119,6 +120,20 @@ class ApplicationRepository(metaclass=ABCMeta):
                 batch.put_item(Item=self._to_save_format(entity))
 
         return all([entity.persist() for entity in entities])
+
+    def _destroy_entities(self, entities):
+        with self._table().batch_writer() as batch:
+            for entity in entities:
+                batch.delete_item(Key=self._build_condition(entity))
+
+        return all([entity.destroy() for entity in entities])
+
+    def _build_condition(self, entity):
+        condition = {}
+        condition[self.hash_key] = getattr(entity, self.hash_key)
+        if range_key:
+            condition[self.range_key] = getattr(entity, self.range_key)
+        return condition
 
     @abstractmethod
     def _to_save_format(self, record):

@@ -13,6 +13,6 @@ class DestroyConnectionUseCase():
             raise NotFoundError(Session, token=session_token)
 
         connection = ConnectionsService.find(session_token, id)
-        ConnectionsService.delete(connection)
+        ConnectionsService.destroy(connection)
 
         return connection

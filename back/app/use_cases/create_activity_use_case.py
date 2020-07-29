@@ -16,6 +16,6 @@ class CreateActivityUseCase():
 
         activity = ActivitiesService.generate(form)
         ActivitiesService.save(activity)
-
         PlacementsService.save(activity.placement)
+
         return activity

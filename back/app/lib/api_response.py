@@ -1,5 +1,6 @@
 OK = 200
 CREATED = 201
+NO_CONTENT = 204
 NOT_FOUND = 404
 UNPROCESSABLE_ENTITY = 422
 
@@ -18,6 +19,10 @@ class ApiResponse():
     @classmethod
     def created(cls, body):
         return ApiResponse(body, CREATED)
+
+    @classmethod
+    def no_content(cls):
+        return ApiResponse(None, NO_CONTENT)
 
     @classmethod
     def unprocessable_entity(cls, errors):

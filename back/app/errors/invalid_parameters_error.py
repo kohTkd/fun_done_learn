@@ -1,6 +1,6 @@
-class InvalidParametersError(Exception):
-    def __init__(self, form):
-        self.form = form
+from app.errors.application_error import ApplicationError
 
+
+class InvalidParametersError(ApplicationError):
     def error_messages(self):
-        return self.form.error_messages()
+        return self.model.error_messages()

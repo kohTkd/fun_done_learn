@@ -10,6 +10,7 @@ class ApplicationEntity(Validatable, metaclass=ABCMeta):
     def __init__(self, **attrs):
         super().__init__()
         self._set_attributes(self._attribute_names, **attrs)
+        self._destroyed = False
         if attrs.get('persisted'):
             self._persisted = True
             self._restore_timestamp(attrs, 'created_at')
@@ -29,20 +30,6 @@ class ApplicationEntity(Validatable, metaclass=ABCMeta):
     def update(self, **attrs):
         self._set_attributes(self._updatable_attribute_names, **attrs)
 
-    def _set_attributes(self, attribute_names, **attrs):
-        for attr_name in attribute_names():
-            if attr_name in attrs:
-                setattr(self, attr_name, attrs[attr_name])
-            elif not hasattr(self, attr_name):
-                setattr(self, attr_name, None)
-
-    @abstractmethod
-    def _attribute_names(self):
-        raise NotImplementedError()
-
-    def _updatable_attribute_names(self):
-        return []
-
     def persist(self):
         self.persisted = True
         return self.is_persisted()
@@ -50,8 +37,30 @@ class ApplicationEntity(Validatable, metaclass=ABCMeta):
     def is_persisted(self):
         return self._persisted
 
+    def destroy(self):
+        self.persisted = False
+        self._destroyed = True
+        return self.is_destroyed()
+
+    def is_destroyed(self):
+        return self._destroyed
+
     def _restore_timestamp(self, attrs, attr_name):
         timestamp = attrs.get(attr_name)
         if isinstance(timestamp, str):
             timestamp = dateutil.parser.parse(timestamp)
         setattr(self, attr_name, timestamp)
+
+    def _set_attributes(self, attribute_names, **attrs):
+        for attr_name in attribute_names():
+            if attr_name in attrs:
+                setattr(self, attr_name, attrs[attr_name])
+            elif not hasattr(self, attr_name):
+                setattr(self, attr_name, None)
+
+    def _updatable_attribute_names(self):
+        return []
+
+    @abstractmethod
+    def _attribute_names(self):
+        raise NotImplementedError()

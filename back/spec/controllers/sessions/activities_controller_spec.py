@@ -1,9 +1,10 @@
-from expects import expect, equal, have_key
+from expects import expect, equal, have_key, be_none
 from mamba import description, context, it, before, shared_context, included_context
 
 from app.controllers.sessions.activities_controller import ActivitiesController
 from app.entities.session import Session
 from app.entities.activity import Activity
+from app.entities.placement import Placement
 from app.repositories.sessions_repository import SessionsRepository
 from app.repositories.activities_repository import ActivitiesRepository
 from app.repositories.placements_repository import PlacementsRepository
@@ -282,6 +283,55 @@ with description(ActivitiesController) as self:
 
             with it('returns Not Found response'):
                 response = ActivitiesController.update(self.params)
+                expect(response.status).to(equal(404))
+                response_body = response.body
+                expect(response.body['errors']).to(equal('セッションが見つかりません'))
+
+    with description('destroy()'):
+        with context('when specified session is present'):
+            with before.each:
+                self.session_token = 'SomeToken'
+                self.session = Session(token=self.session_token, title='Some Title')
+                self.sessions_respository.save(self.session)
+
+            with context('when specified activity is present'):
+                with before.each:
+                    self.token = 'ActivityToken'
+                    self.activity = Activity(session_token=self.session.token, token=self.token, content='Content')
+                    self.activities_repository.save(self.activity)
+                    self.placement = Placement(session_token=self.session_token, activity_token=self.token)
+                    self.placements_repository.save(self.placement)
+                    self.params = {'token': self.token, 'session_token': self.session_token}
+
+                with it('returns No Content response'):
+                    response = ActivitiesController.destroy(self.params)
+                    expect(response.status).to(equal(204))
+                    expect(response.body).to(be_none)
+
+                with it('delete activity'):
+                    ActivitiesController.destroy(self.params).body
+                    expect(self.activities_repository.find(self.session_token, self.token)).to(be_none)
+
+                with it('delete placement'):
+                    ActivitiesController.destroy(self.params).body
+                    expect(self.placements_repository.find(self.session_token, self.token)).to(be_none)
+
+            with context('when specified activity is absent'):
+                with before.each:
+                    self.params = {'token': 'ActivityToken', 'session_token': self.session_token}
+
+                with it('returns Not Found response'):
+                    response = ActivitiesController.destroy(self.params)
+                    expect(response.status).to(equal(404))
+                    response_body = response.body
+                    expect(response.body['errors']).to(equal('アクティビティが見つかりません'))
+
+        with context('when specified session is absent'):
+            with before.each:
+                self.params = {'token': 'ActivityToken', 'session_token': 'SomeToken'}
+
+            with it('returns Not Found response'):
+                response = ActivitiesController.destroy(self.params)
                 expect(response.status).to(equal(404))
                 response_body = response.body
                 expect(response.body['errors']).to(equal('セッションが見つかりません'))

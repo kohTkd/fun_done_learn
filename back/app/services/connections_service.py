@@ -25,8 +25,8 @@ class ConnectionsService():
         return ConnectionsRepository().query(session_token)
 
     @classmethod
-    def delete(cls, session_token, id):
-        return ConnectionsRepository().delete(session_token, id)
+    def destroy(cls, connection):
+        return ConnectionsRepository().destroy(connection)
 
     @classmethod
     def bloadcast(cls, connection_ids, body, resource_name, action):
