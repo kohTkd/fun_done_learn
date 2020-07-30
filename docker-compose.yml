@@ -1,5 +1,7 @@
 version: "3.7"
 volumes:
+  # front-node:
+  #   driver: local
   back-node:
     driver: local
   dynamodb-data:
@@ -32,11 +34,11 @@ services:
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       CORS_ORIGIN: "*"
   dynamodb:
-    image: amazon/dynamodb-local
+    build: ./dynamodb
     volumes:
       - dynamodb-data:/home/dynamodblocal/data
     entrypoint:
       - java
-    command: ["-jar", "DynamoDBLocal.jar", "-dbpath", "/home/dynamodblocal/data"]
+    command: ["-jar", "DynamoDBLocal.jar", "-dbPath", "/home/dynamodblocal/data"]
     ports:
       - "8000:8000"
