@@ -123,7 +123,6 @@ export default class SessionBoard extends Vue {
     others.forEach((other: Activity | Note) => {
       if (!updateStrategy(other)) {
         originals.push(other);
-        console.log(other);
       }
     });
 

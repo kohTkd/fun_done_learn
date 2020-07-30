@@ -2,6 +2,12 @@
 const path = require('path');
 
 module.exports = {
+  pages: {
+    index: {
+      entry: 'src/main.ts',
+      title: 'Fun Done Learn online Board'
+    }
+  },
   transpileDependencies: ['vuetify'],
   devServer: {
     overlay: {

@@ -3,7 +3,7 @@
     <v-container id="display-notes" class="overflow-y-auto">
       <v-row v-scroll:#display-notes="onScroll">
         <v-list flat dense width="100%" class="notes-list">
-          <v-list-item v-for="note in notes || []" v-bind:key="note.token">
+          <v-list-item v-for="note in sortedNotes || []" v-bind:key="note.token">
             <v-list-item-content>
               <v-list-item-title class="note-content">{{ note.content }}</v-list-item-title>
               <v-list-item-subtitle>{{ note.timestamp }}</v-list-item-subtitle>
@@ -31,6 +31,10 @@ export default class Notes extends Vue {
   onScroll() {
     // Do nothing.
   }
+
+  get sortedNotes(): Array<Note> {
+    return this.notes.sort((a: Note, b: Note) => a.sortKey - b.sortKey);
+  }
 }
 </script>
 
@@ -39,6 +43,7 @@ export default class Notes extends Vue {
 
 #display-notes {
   max-height: 20rem;
+  min-height: 15rem;
 
   .notes-list {
     padding-top: 0;

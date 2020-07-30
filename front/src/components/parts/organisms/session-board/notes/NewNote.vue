@@ -33,7 +33,7 @@ export default class NewNote extends Vue {
   @Emit('createNote')
   createNote() {
     if (this.valid) {
-      NotesRepository.create(this.form.createParams(), this.sessionToken).then((note: Note) => {
+      return NotesRepository.create(this.form.createParams(), this.sessionToken).then((note: Note) => {
         this.refresh();
         return note;
       });
